@@ -1,33 +1,39 @@
 #include "instrucciones.h"
 
 
-long int ands(long int rd, long int rm)
+
+unsigned long int ands(long int rd, long int rm)
 {
     rd= rd&rm;
+    return rd;
 }
-return rd;
 
-long int eors(long int rd,long int rm)
+
+unsigned long int eors(long int rd,long int rm)
 {
     rd=rd^rm;
+    return rd;
 }
-return rd;
 
-long int movs(long int rd,long int imm)
+
+unsigned  long int movs(long int rd,long int imm)
 {
     rd=imm;
-}
-return rd;
+    return rd;
 
-long int orrs(long int rd,long int rm)
+}
+ unsigned long int orrs(long int rd,long int rm)
 {
     rd=rd|rm;
+    return rd;
 }
-return rd;
 
-long int subs(long int rd,long int rn,long int rm)
+
+unsigned long int subs(long int rd,long int rm)
 {
-    rd=rn-=rm;
+    rd-=rm;
+    return rd;
 }
-return rd;
+
+
 
