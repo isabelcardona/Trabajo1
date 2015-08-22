@@ -1,6 +1,6 @@
 #include "libreria.h"
 
-void mostrar_registros(long int regs[12])
+void mostrar_registros(unsigned long int regs[12])
 {
     int i;
     for(i=0;i<12;i++)
