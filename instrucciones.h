@@ -1,35 +1,35 @@
-long int ands(long int rd, long int rm );
+unsigned long int ands(unsigned long int rd, unsigned long int rm );
 /**
 *\brief funcion que multiplica
 *\param rd operando 1
 *\param rm operando 2
-*\return un entero con el resultado 
+*\return un entero con el resultado
 */
-long int eors(long int rd,long int rm );
+unsigned long int eors(unsigned long int rd,unsigned long int rm );
 /**
-*\brief funcion que 
+*\brief funcion que realiza una xor
 *\param rd operando 1
 *\param rm operando 2
-*\return un entero con el resultado 
+*\return un entero con el resultado
 */
-long int movs(long int rd,long int imm );
+unsigned long int movs(unsigned long int rd,unsigned long int imm );
 /**
-*\brief funcion que copia un archivo 
+*\brief funcion que copia un registro
 *\param rd operando 1
 *\param imm operando 2
-*\return un entero con el resultado 
+*\return un entero con el resultado
 */
-long int orrs(long int rd,long int rm );
+unsigned long int orrs(unsigned long int rd,unsigned long int rm );
 /**
-*\brief funcion que 
+*\brief funcion que realiza una or
 *\param rd operando 1
 *\param rm operando 2
-*\return un entero con el resultado 
+*\return un entero con el resultado
 */
-long int subs(long int rd,long int rm );
+unsigned long int subs(unsigned long int rd,unsigned long int rm );
 /**
 *\brief funcion que resta
 *\param rd operando 1
 *\param rm operando 2
-*\return un entero con el resultado 
+*\return un entero con el resultado
 */
