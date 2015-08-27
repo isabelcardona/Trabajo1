@@ -1,0 +1,12 @@
+CC=gcc
+CFLAGS=- 03 - C - WALL
+ 
+all= obj
+
+	$(CC)-0 main.exe *.0
+
+obj:
+	$(CC) $ ( CFLAGS ) *.c
+
+Clean:
+	rm main.exe
