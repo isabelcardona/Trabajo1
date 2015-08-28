@@ -33,3 +33,13 @@ unsigned long int subs(unsigned long int rd,unsigned long int rm );
 *\param rm operando 2
 *\return un entero con el resultado
 */
+
+unsigned long int ROR (unsigned long int rd, unsigned long int rm, unsigned long int c):
+
+unsigned long int Bic (unsigned long int rd, unsigned long int rm);
+
+unsigned long int Mvn(unsigned long int rd,unsigned long int rm);
+
+ unsigned long int ASR (unsigned long int rd,unsigned long int rm, unsigned long int c)
+
+

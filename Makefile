@@ -1,11 +1,11 @@
 cc=gcc
-CFlAGS = -o3 - C -wall
+CFlAGS = -O3 - c -Wall
  
-all:	obj
+all:	object
 
 	$(cc) -o main *.0
 
-obj:
+object:
 	$(cc) $(CFlAGS) *.c
 
 Clean:
