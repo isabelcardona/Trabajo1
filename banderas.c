@@ -1,4 +1,4 @@
-unsigned long int idefbands(unsigned long int rd,unsigned long int rm,unsigned long int temp);
+unsigned long int idefbands(unsigned long int rd,unsigned long int rm);
 {
     unsigned long int bands[4]={0};
     if(rd>2147483648)
@@ -14,5 +14,8 @@ unsigned long int idefbands(unsigned long int rd,unsigned long int rm,unsigned l
         bands[2]=1;
     }
     if(((rd&&rm)>=2147483648)&&((rd+rm)<2147483648))
+    {
         bands[3];
+    }
+        return bands;
 }

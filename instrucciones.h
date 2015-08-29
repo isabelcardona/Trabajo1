@@ -42,7 +42,7 @@ void TST(unsigned long int rd, unsigned long int rm);
 unsigned long int ADD(unsigned long int rd,unsigned long int rm);
 unsigned long int MUL(unsigned long int rd, unsigned long int rm);
 unsigned long int SBC(unsigned long int rd, unsigned long int rm, unsigned long int c);
-unsigned long int NOP(unsigned long int rd, unsigned long int rm);
+void NOP(unsigned long int rd, unsigned long int rm);
 void REV(unsigned long int rd, unsigned long int rm);
 void REV16(unsigned long int rd,unsigned long int rm);
 unsigned long int ROR(unsigned long int rd, unsigned long int rm, unsigned long int c);
