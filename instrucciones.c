@@ -101,6 +101,40 @@ void REV(unsigned long int rd, unsigned long int rm);
      flags=idefbands(rd,rm);
 }
 
+unsigned long int ROR (unsigned long int rd, unsigned long int rm, unsigned long int c)
+  {
+    unsigned long int tem, tem1;
+    tem=rm>>c;
+    tem1=rm<<(32−c);
+    c=tem|tem1;
+    }
+
+unsigned long int Bic (unsigned long int rd, unsigned long int rm)
+    {
+     rd&=~rm;
+    return rd;
+    }
+
+    unsigned long int Mvn(unsigned long int rd,unsigned long int rm)
+{
+    rd=~rm;
+    return rd;
+}
+
+ unsigned long int ASR (unsigned long int rd,unsigned long int rm, unsigned long int c)
+
+    {
+
+
+    unsigned int tem;
+    tem=~0>>(32-c);
+    tem=tem<<(32-c);
+    Rd=Rn>>c;
+    Rd=Rd|tem;
+
+    }
+
+
 void REV16(unsigned long int rd,unsigned long int rm);
 {
      rd=((rm<<24)>>16)|((rm<<16)>>24);
