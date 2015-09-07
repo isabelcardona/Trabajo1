@@ -1,53 +1,59 @@
-unsigned long int ands(unsigned long int rd, unsigned long int rm );
+
+#include <stdio.h>
+#include <math.h>
+#include <stdint.h>
+
+
+uint32_t ands(uint32_t rd, uint32_t rm );
 /**
 *\brief funcion que multiplica
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int eors(unsigned long int rd,unsigned long int rm );
+uint32_t eors(uint32_t rd,uint32_t rm );
 /**
 *\brief funcion que realiza una xor
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int movs(unsigned long int rd,unsigned long int imm );
+uint32_t movs(uint32_t rd,uint32_t imm );
 /**
 *\brief funcion que copia un registro
 *\param rd operando 1
 *\param imm operando 2
 *\return un entero con el resultado
 */
-unsigned long int orrs(unsigned long int rd,unsigned long int rm );
+uint32_t orrs(uint32_t rd,uint32_t rm );
 /**
 *\brief funcion que realiza una or
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int subs(unsigned long int rd,unsigned long int rm );
+uint32_t subs(uint32_t rd,uint32_t rm );
 /**
 *\brief funcion que resta
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int LSLS(unsigned long int rd,unsigned long int rm);
+uint32_t LSLS(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que desplaza logica/ hacia la izquierda
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int LSR(unsigned long int rd,unsigned long int rm);
+uint32_t LSR(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que desplaza logica/ hacia la derecha
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int ADC(unsigned long int rd,unsigned long int rm,unsigned long int c);
+uint32_t ADC(uint32_t rd,uint32_t rm,uint32_t c);
 /**
 *\brief funcion que suma con carry
 *\param rd operando 1
@@ -55,42 +61,42 @@ unsigned long int ADC(unsigned long int rd,unsigned long int rm,unsigned long in
 *\param c operando  3
 *\return un entero con el resultado
 */
-void CMN(unsigned long int rd, unsigned long int rm);
+void CMN(uint32_t rd, uint32_t rm);
 /**
 *\brief funcion que suma sin guardar resultado
 *\param rd operando 1
 *\param rm operando 2
 *\no retorna
 */
-void CMP(unsigned long int rd,unsigned long int rm);
+void CMP(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que resta sin guardar resultado
 *\param rd operando 1
 *\param rm operando 2
 *\no retorna
 */
-void TST(unsigned long int rd, unsigned long int rm);
+void TST(uint32_t rd, uint32_t rm);
 /**
 *\brief funcion que hace suma lógica sin guardar
 *\param rd operando 1
 *\param rm operando 2
 *\no retorna
 */
-unsigned long int ADD(unsigned long int rd,unsigned long int rm);
+uint32_t ADD(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que suma
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int MUL(unsigned long int rd, unsigned long int rm);
+uint32_t MUL(uint32_t rd, uint32_t rm);
 /**
 *\brief funcion que multiplica
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int SBC(unsigned long int rd, unsigned long int rm, unsigned long int c);
+uint32_t SBC(uint32_t rd, uint32_t rm, uint32_t c);
 /**
 *\brief funcion que resta con carry
 *\param rd operando 1
@@ -98,28 +104,28 @@ unsigned long int SBC(unsigned long int rd, unsigned long int rm, unsigned long 
 *\param c operando  3
 *\return un entero con el resultado
 */
-void NOP(unsigned long int rd, unsigned long int rm);
+void NOP(void);
 /**
 *\brief funcion negadora
 *\param rd operando 1
 *\param rm operando 2
 *\no retorna
 */
-void REV(unsigned long int rd, unsigned long int rm);
+void REV(uint32_t rd, uint32_t rm);
 /**
 *\brief funcion que cambia orden de bytes
 *\param rd operando 1
 *\param rm operando 2
 *\no retorna
 */
-void REV16(unsigned long int rd,unsigned long int rm);
+void REV16(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que cambia orden cada halfword de 16 bytes
 *\param rd operando 1
 *\param rm operando 2
 *\no retorna
 */
-unsigned long int ROR(unsigned long int rd, unsigned long int rm, unsigned long int c);
+uint32_t ROR(uint32_t rd, uint32_t rm, uint32_t c);
 /**
 *\brief funcion que rota hacia la derecha
 *\param rd operando 1
@@ -127,21 +133,21 @@ unsigned long int ROR(unsigned long int rd, unsigned long int rm, unsigned long 
 *\param c operando  3
 *\return un entero con el resultado
 */
-unsigned long int BIC(unsigned long int rd, unsigned long int rm);
+uint32_t BIC(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que realiza operacion and entre un registro y el complemento de otro
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int MVN(unsigned long int rd,unsigned long int rm);
+uint32_t MVN(uint32_t rd,uint32_t rm);
 /**
 *\brief funcion que guarda el complemento de un registro
 *\param rd operando 1
 *\param rm operando 2
 *\return un entero con el resultado
 */
-unsigned long int ASR(unsigned long int rd,unsigned long int rm, unsigned long int c);
+uint32_t ASR(uint32_t rd,uint32_t rm,uint32_t c);
 /**
 *\brief funcion que hace desplazamiento aritmetico hacia la derecha
 *\param rd operando 1
