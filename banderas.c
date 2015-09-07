@@ -1,6 +1,12 @@
-unsigned long int idefbands(unsigned long int rd,unsigned long int rm);
+#include <stdio.h>
+#include <stdlib.h>
+#include "instrucciones.h"
+
+#include <math.h>
+
+uint32_t idefbands(uint32_t rd,uint32_t rm)
 {
-    unsigned long int bands[4]={0};
+    uint32_t bands[4]={0};
     if(rd>2147483648)
     {
         bands[0]=1;
