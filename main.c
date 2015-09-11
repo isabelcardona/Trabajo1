@@ -1,19 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "instrucciones.h"
-#include "libreria.h
+#include "libreria.h"
 #include <math.h>
-
+#include <stdint.h>
 int main()
 {
 ///<<<<<<< HEAD
-long int regs[12];
-long int rd,rm,imm;
+uint32_t regs[12];
+uint32_t rd,rm,imm,r;
 mostrar_registros(regs);
-eors(rd,rm);
-movs(rd,imm);
-orrs(rd,rm);
-subs(rd,rm);
+rd=10;
+rm=6;
+CMP(&rd,&rm);
+printf("%d",rd);
+
 
 ///=======
    /* unsigned long int regs[12];

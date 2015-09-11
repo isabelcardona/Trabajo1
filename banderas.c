@@ -4,7 +4,7 @@
 
 #include <math.h>
 
-uint32_t idefbands(uint32_t rd,uint32_t rm)
+void fbands(uint32_t *rd,uint32_t *rm)
 {
     uint32_t bands[4]={0};
     if(rd>2147483648)
