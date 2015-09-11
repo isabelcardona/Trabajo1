@@ -68,7 +68,7 @@ void CMN(uint32_t rd, uint32_t rm);
 *\param rm operando 2
 *\no retorna
 */
-void CMP(uint32_t rd,uint32_t rm);
+void CMP(uint32_t *rd,uint32_t *rm);
 /**
 *\brief funcion que resta sin guardar resultado
 *\param rd operando 1

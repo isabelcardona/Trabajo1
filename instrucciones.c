@@ -57,24 +57,8 @@ uint32_t LSR(uint32_t rd,uint32_t rm)
     flags=idefbands(rd,rm);
     return rd;
 }
-uint32_t ADC(uint32_t rd, uint32_t rm,uint32_t c)
-{
-    rd=rd+rm+c;
-    flags=idefbands(rd,rm);
-    return rd;
-}
-void CMN(uint32_t rd, uint32_t rm)
-{
-    flags=idefbands(rd,rm);
-}
-void CMP(uint32_t rd,uint32_t rm)
-{
-    flags=idefbands(rd,rm);
-}
-void TST(uint32_t rd, uint32_t rm)
-{
-    flags=idefbands(rd,rm);
-}
+
+
 uint32_t ADD(uint32_t rd,uint32_t rm)
 {
     rd=rd+rm;
@@ -97,11 +81,7 @@ uint32_t LSLS(uint32_t rd,uint32_t rm)
 /**
 *\ esta funcion desplaza el registro rd hacia la izquierda las veces que lo indique rm
 */
-uint32_t LSR(uint32_t rd,uint32_t rm)
-{
-    rd=rd/(2^rm);
-    return rd;
-}
+
 
 
 uint32_t SBC(uint32_t rd, uint32_t rm, uint32_t c)
@@ -134,10 +114,9 @@ void CMN(uint32_t rd, uint32_t rm)
 /**
 *\esta funcion realiza la suma aritmetica pero el resultado no lo guarda
 */
-void CMP(uint32_t rd,uint32_t rm)
+void CMP(uint32_t *rd,uint32_t *rm)
 {
-    rd=rd-rm;
-    return rd;
+    *rd=*rd-*rm;
     }
 /**
 *\esta funcion realiza una resta aritmetica sin guardar el resultado, n no se retorna
@@ -149,28 +128,15 @@ void TST(uint32_t rd, uint32_t rm)
 /**
 *\esta funcion se realiza una operacion AND y su resultado se guarda en n pero no se retorna nada
 */
-uint32_t ADD(uint32_t rd,uint32_t rm)
-{
-    rd=rd+rm;
-    return rd;
-}
+
 /**
 *esta funcion realiza una suma aritmetica
 */
-uint32_t MUL(uint32_t rd, uint32_t rm)
-{
-    rd=rd*rm;
-    return rd;
-}
-uint32_t SBC(uint32_t rd, uint32_t rm, uint32_t c)
-{
-    rd=rd-rm+c;
-}
+
+
 /**
 *\esta funcion realiza una resta agregandole la bandera de acarreo
 */
-void NOP(void){
-}//retorna  void y resibe void
 
 
 void REV(uint32_t rd, uint32_t rm)
@@ -182,21 +148,9 @@ void REV(uint32_t rd, uint32_t rm)
 }
 
 
-void REV(uint32_t rd, uint32_t rm)
-{
-     rd=rm<<24;
-     rd=rd|rm>>24;
-     rd=rd|((((rm<<8)>>24)<<8)|(((rm<<16)>>24)<<16));
-     flags=idefbands(rd,rm);
-}
 
-uint32_t ROR (uint32_t rd,uint32_t rm, uint32_t c)
-  {
-    uint32_t tem, tem1;
-    tem=rm>>c;
-    tem1=rm<<(32− c);
-    c=tem|tem1;
-    }
+
+
 uint32_t Bic (uint32_t rd, uint32_t rm)
     {
      rd&=~rm;
@@ -209,18 +163,7 @@ uint32_t Bic (uint32_t rd, uint32_t rm)
     return rd;
 }
 
-uint32_t ASR (uint32_t rd,uint32_t rm, uint32_t c)
 
-    {
-
-
-    uint32_t tem;
-    tem=~0>>(32-c);
-    tem=tem<<(32-c);
-    rd=rm>>c;
-    rd=rd|tem;
-
-    }
 
 
 
@@ -235,20 +178,11 @@ uint32_t ROR(uint32_t rd, uint32_t rm, uint32_t c)
 {
    uint32_t tem, tem1;
     tem=rm>>c;
-    tem1=rm<<(32−c);
+    tem1=rm<<32;
     c=tem|tem1;
 
 }
-uint32_t ROR(uint32_t rd, uint32_t rm, uint32_t c)
-{
-    uint32_t tem, tem1;
-    tem=rd>>c;
-    tem1=rd<<(32−c);
-    c=tem|tem1;
-    flags=idefbands(rd,rm);
-    return c;
 
-}
 
 uint32_t BIC(uint32_t rd,uint32_t rm)
 {
@@ -259,17 +193,12 @@ uint32_t BIC(uint32_t rd,uint32_t rm)
 /**
 *\esta funcion realiza una operacion AND entre un registro y otro
 */
-uint32_t MVN(uint32_t rd,uint32_t rm)
-{
-    rd=~rm;
-     flags=idefbands(rd,rm);
-    return rd;
-}
+
 
 uint32_t MVN(uint32_t rd,uint32_t rm)
 {
     rd=~rm;
-    flags=idefbands(rd,rm);
+    flags=fbands(rd,rm);
 
     return rd;
 }
