@@ -4,7 +4,7 @@
 
 #include <math.h>
 
-void fbands(uint32_t *rd,uint32_t *rm)
+void fbands(uint32_t rd,uint32_t rm) // esta es parte de la estructura de las banderas
 {
     uint32_t bands[4]={0};
     if(rd>2147483648)
@@ -21,7 +21,7 @@ void fbands(uint32_t *rd,uint32_t *rm)
     }
     if(((rd&&rm)>=2147483648)&&((rd+rm)<2147483648))
     {
-        bands[3];
+        bands[3]; //numero de banderas
     }
-        return bands;
+    return bands;
 }

@@ -1,1 +1,2 @@
-unsigned long int idefbands(unsigned long int rd,unsigned long int rm);
+void fbands(uint32_t rd,uint32_t rm); //funcion de banderas
+                                        // muestra las banderas sin retornar.
