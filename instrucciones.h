@@ -3,35 +3,35 @@
 #include <stdint.h>
 
 
-uint32_t ands(uint32_t rd, uint32_t rm );
+uint32_t ANDS(uint32_t rd, uint32_t rm );
 /**
 brief cuncion que realiza una ands
 param rd operando 1
 param rm operando 2
 return un entero con el resultado
 **/
-uint32_t eors(uint32_t rd,uint32_t rm );
+uint32_t EORS(uint32_t rd,uint32_t rm );
 /**
 brief funcion que realiza una xor
 param rd operando 1
 param rm operando 2
 return un entero con el resultado
 */
-uint32_t movs(uint32_t rd,uint32_t imm );
+uint32_t MOVS(uint32_t rd,uint32_t imm );
 /**
 brief funcion que copia un registro
 param rd operando 1
 param imm operando 2
 return un entero con el resultado
 */
-uint32_t orrs(uint32_t rd,uint32_t rm );
+uint32_t ORRS(uint32_t rd,uint32_t rm );
 /**
 brief funcion que realiza una or
 param rd operando 1
 param rm operando 2
 return un entero con el resultado
 */
-uint32_t subs(uint32_t rd,uint32_t rm );
+uint32_t SUBS(uint32_t rd,uint32_t rm );
 /**
 brief funcion que resta
 param rd operando 1
@@ -45,14 +45,14 @@ param rd operando 1
 param rm operando 2
 return un entero con el resultado
 */
-uint32_t LSR(uint32_t rd,uint32_t rm);
+uint32_t LSRS(uint32_t rd,uint32_t rm);
 /**
 brief funcion que desplaza logica/ hacia la derecha
 param rd operando 1
 param rm operando 2
 return un entero con el resultado
 */
-uint32_t ADC(uint32_t rd,uint32_t rm,uint32_t c);
+uint32_t ADCS(uint32_t rd,uint32_t rm,uint32_t c);
 /**
 brief funcion que suma con carry
 param rd operando 1
@@ -67,7 +67,7 @@ param rd operando 1
 param rm operando 2
 no retorna
 */
-void CMP(uint32_t *rd,uint32_t *rm);
+void CMP(uint32_t rd,uint32_t rm);
 /**
 brief funcion que resta sin guardar resultado
 param rd operando 1
@@ -81,7 +81,7 @@ param rd operando 1
 param rm operando 2
 no retorna
 */
-uint32_t ADD(uint32_t rd,uint32_t rm);
+uint32_t ADDS(uint32_t rd,uint32_t rm);
 /**
 brief funcion que suma
 param rd operando 1
