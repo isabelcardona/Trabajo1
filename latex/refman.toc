@@ -1,0 +1,7 @@
+\select@language {spanish}
+\contentsline {chapter}{\numberline {1}Trabajo1}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}\IeC {\'I}ndice de clases}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Lista de clases}{3}{section.2.1}
+\contentsline {chapter}{\numberline {3}Documentaci\IeC {\'o}n de las clases}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}Referencia de la Estructura ins\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}t}{5}{section.3.1}
+\contentsline {section}{\numberline {3.2}Referencia de la Estructura instruction\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}t}{5}{section.3.2}

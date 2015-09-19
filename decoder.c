@@ -22,11 +22,11 @@ int decodeInstruction(instruction_t instruction)
             pc=pc+2;
     }
     if( strcmp(instruction.mnemonic,"CMP") == 0 ){
-		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
-		b=instruction.op2_value; //--> Valor primer operando
+		a=instruction.op1_value; /**--> Valor primer operando*/
+		tipo1=instruction.op1_type  /**--> Tipo primer operando (R->Registro #->Numero N->Ninguno)*/
+		b=instruction.op2_value; /**--> Valor segundo operando */
 		tipo2=instruction.op2_type
-		// ... Igual para los otros operandos
+
 		Rd=regs[a];
 		Rm=regs[b];
 		CMP(Rd,Rm)
@@ -45,7 +45,7 @@ int decodeInstruction(instruction_t instruction)
 		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
 		b=instruction.op2_value; //--> Valor primer operando
 		tipo2=instruction.op2_type
-		// ... Igual para los otros operandos
+		
 		Rd=regs[a];
 		Rm=regs[b];
 		Rd=ADC(Rd,Rm,1)
@@ -101,11 +101,11 @@ instruction_t getInstruction(char* instStr)
 	int num=0;
 
 	strcpy(split, instStr);
-	/* Obtiene el mnemonico de la instrucción */
+	/** Obtiene el mnemonico de la instrucción */
 	split = strtok(split, " ,");
 	strcpy(instruction.mnemonic, split);
 
-	/* Separa los operandos */
+	/** Separa los operandos */
 	while (split != NULL)
 	{
 		switch(num){
@@ -141,18 +141,18 @@ instruction_t getInstruction(char* instStr)
 
 int readFile(char* filename, ins_t* instructions)
 {
-	FILE* fp;	/* Puntero a un archivo  */
-	int lines;	/* Cantidad de líneas del archivo */
-	int line=0;	/* Línea leida */
-	char buffer[50]; /* Almacena la cadena leida */
+	FILE* fp;	/** Puntero a un archivo  */
+	int lines;	/** Cantidad de líneas del archivo */
+	int line=0;	/** Línea leida */
+	char buffer[50]; /** Almacena la cadena leida */
 
-	fp = fopen(filename, "r");	/* Abrir el archivo como solo lectura */
+	fp = fopen(filename, "r");	/** Abrir el archivo como solo lectura */
 	if( fp==NULL )
-		return -1;	/* Error al abrir el archivo */
+		return -1;	/** Error al abrir el archivo */
 
-	lines = countLines(fp)-1;	/* Cantidad de líneas*/
+	lines = countLines(fp)-1;	/** Cantidad de líneas*/
 
-	/* Asignación dinámica de memoria para cada instrucción */
+	/** Asignación dinámica de memoria para cada instrucción */
 	instructions->array = (char**)malloc(lines*sizeof(char*));
 	while ( fgets(buffer, 50, fp) != NULL && line<lines ){
         instructions->array[line] = (char*)malloc(strlen(buffer)*sizeof(char));
@@ -160,7 +160,7 @@ int readFile(char* filename, ins_t* instructions)
 		line++;
  	}
 
-	fclose(fp);	/* Cierra el archivo */
+	fclose(fp);	/** Cierra el archivo */
 
 	return lines;
 }
