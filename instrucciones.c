@@ -5,7 +5,7 @@
 
 
 uint32_t flags=0; //funcion de banderas, valor inicial
-uint32_t ands(uint32_t rd, uint32_t  rm)
+uint32_t ANDS(uint32_t rd, uint32_t  rm)
 {
     rd= rd&rm;
     flags=fbands(rd,rm);
@@ -13,15 +13,15 @@ uint32_t ands(uint32_t rd, uint32_t  rm)
 }
 
 
-uint32_t eors(uint32_t rd,uint32_t rm)
+uint32_t EORS(uint32_t rd,uint32_t rm)
 {
     rd=rd^rm;
-    flags=idefbands(rd,rm);
+    flags=fbands(rd,rm);
     return rd;
 }
 
 
-uint32_t movs(uint32_t rd,uint32_t imm)  //funcion que copia archivo en otro
+uint32_t MOVS(uint32_t rd,uint32_t imm)  //funcion que copia archivo en otro
 {
     rd=imm;
     flags=fbands(rd,imm);
@@ -29,7 +29,7 @@ uint32_t movs(uint32_t rd,uint32_t imm)  //funcion que copia archivo en otro
 
 }
 
- uint32_t orrs(uint32_t rd,uint32_t rm)
+ uint32_t ORRS(uint32_t rd,uint32_t rm)
 {
     rd=rd|rm;
     flags=fbands(rd,rm);
@@ -37,19 +37,19 @@ uint32_t movs(uint32_t rd,uint32_t imm)  //funcion que copia archivo en otro
 }
 
 
-uint32_t subs(uint32_t rd,uint32_t rm)
+uint32_t SUBS(uint32_t rd,uint32_t rm)
 {
     rd-=rm;
     flags=fbands(rd,rm);
     return rd;
 }
-uint32_t LSL(uint32_t rd,uint32_t rm)
+uint32_t LSLS(uint32_t rd,uint32_t rm)
 {
   rd=rd*2^rm;
   flags=fbands(rd,rm);
   return rd;
 }
-uint32_t LSR(uint32_t rd,uint32_t rm)
+uint32_t LSRS(uint32_t rd,uint32_t rm)
 {
     rd=rd/(2^rm);            //esta función desplaza el registro rd hacia la derecha
     flags=fbands(rd,rm);     //las veces que lo indique rm pero no se multiplica, solo se divide.
@@ -57,7 +57,7 @@ uint32_t LSR(uint32_t rd,uint32_t rm)
 }
 
 
-uint32_t ADD(uint32_t rd,uint32_t rm)  //esta funcion realiza una suma aritmetica
+uint32_t ADDS(uint32_t rd,uint32_t rm)  //esta funcion realiza una suma aritmetica
 {
     rd=rd+rm;
     flags=fbands(rd,rm);
@@ -70,18 +70,11 @@ uint32_t MUL(uint32_t rd, uint32_t rm)
     return rd;
 }
 
-uint32_t LSLS(uint32_t rd,uint32_t rm)
-{
-  rd=rd*2^rm;   // esta funcion desplaza el registro rd hacia la izquierda las veces que lo indique rm
-
-  return rd;
-
-}
 
 uint32_t SBC(uint32_t rd, uint32_t rm, uint32_t c)
 {
     rd=rd-rm+c;
-    flags=idefbands(rd,rm);
+    flags=fbands(rd,rm);
     return rd;
 }
 void NOP(void) //función que no realiza ninguna operacion
@@ -89,7 +82,7 @@ void NOP(void) //función que no realiza ninguna operacion
 
 }
 
-uint32_t ADC(uint32_t rd,uint32_t rm,uint32_t c)
+uint32_t ADCS(uint32_t rd,uint32_t rm,uint32_t c)
 {
 
     rd=rd+rm+c;     //esta funcion realiza una suma agregandole la bandera de acarreo
@@ -104,9 +97,9 @@ void CMN(uint32_t rd, uint32_t rm)
 
 }
 
-void CMP(uint32_t *rd,uint32_t *rm)
+void CMP(uint32_t rd,uint32_t rm)
 {
-    *rd=*rd-*rm;  //esta funcion realiza una resta aritmetica sin guardar el resultado, n no se retorna
+    rd=rd-rm;  //esta funcion realiza una resta aritmetica sin guardar el resultado, n no se retorna
 }
 
 
@@ -126,13 +119,7 @@ void REV(uint32_t rd, uint32_t rm)
 }
 
 
-uint32_t Bic (uint32_t rd, uint32_t rm)
-    {
-     rd&=~rm;
-    return rd;
-    }
-
-uint32_t Mvn(uint32_t rd,uint32_t rm)
+uint32_t MVN(uint32_t rd,uint32_t rm)
 {
     rd=~rm;
     return rd;
@@ -158,14 +145,6 @@ uint32_t ROR(uint32_t rd, uint32_t rm, uint32_t c)
 uint32_t BIC(uint32_t rd,uint32_t rm)
 {
      rd&=~rm;
-
-    return rd;
-}
-
-uint32_t MVN(uint32_t rd,uint32_t rm)
-{
-    rd=~rm;
-    flags=fbands(rd,rm);
 
     return rd;
 }
