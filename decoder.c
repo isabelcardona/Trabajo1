@@ -2,95 +2,195 @@
 #include "banderas.h"
 #include "instrucciones.h"
 #include "libreria.h"
-int a, b, pc=0;
-float c;
-char tipo1, tipo2;
-uint32_t Rd, Rm;
 
-int decodeInstruction(instruction_t instruction)
+char tipo1, tipo2, tipo3;
+uint32_t Rd, Rm,a, b, c;
+
+void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, int* pc)
 {
-    if( (strcmp(instruction.mnemonic,"BL"))&&(bands[0]==1) ){
-            pc=2;
+    /*int lr;
+    if( (strcmp(instruction.mnemonic,"BL") == 0)){
+            printf("aaaaaaaaaaaaa");
+            tipo1=instruction.op1_type;
+            a=instruction.op1_value;
+            lr=pc+1;
+            pc=pc+a;
     }
-    if( strcmp(instruction.mnemonic,"B") == 0 ){
-            pc=0;
+
+    if( (strcmp(instruction.mnemonic,"B") == 0)){
+            tipo1=instruction.op1_type;
+            a=instruction.op1_value;
+            pc=a;
     }
-    if( (strcmp(instruction.mnemonic,"BCC"))&&(bands[1]==0) ){
-            pc=2;
+
+    if( (strcmp(instruction.mnemonic,"BCC") == 0) && (bands[2]==0)){
+            tipo1=instruction.op1_type;
+            a=instruction.op1_value;
+            pc=pc+a;
     }
-    if( strcmp(instruction.mnemonic,"BX") == 0 ){
-            pc=pc+2;
+
+    if( (strcmp(instruction.mnemonic,"BNE") == 0) && (bands[1]==0)){
+            tipo1=instruction.op1_type;
+            a=instruction.op1_value;
+            pc=pc+a;
     }
+    if( (strcmp(instruction.mnemonic,"BX") == 0) && (bands[1]==0)){
+            pc=lr;
+    }*/
+
+
     if( strcmp(instruction.mnemonic,"CMP") == 0 ){
+<<<<<<< HEAD
 		a=instruction.op1_value; /**--> Valor primer operando*/
 		tipo1=instruction.op1_type  /**--> Tipo primer operando (R->Registro #->Numero N->Ninguno)*/
 		b=instruction.op2_value; /**--> Valor segundo operando */
 		tipo2=instruction.op2_type
 
+=======
+        move(4,0);
+        printw("CMP ");
+        refresh();
+		a=instruction.op1_value; //--> Valor primer operando
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		b=instruction.op2_value; //--> Valor primer operando
+		tipo2=instruction.op2_type;
+		// ... Igual para los otros operandos
+>>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
 		Rd=regs[a];
 		Rm=regs[b];
-		CMP(Rd,Rm)
+		CMP(Rd,Rm,bands);
 	}
     if( strcmp(instruction.mnemonic,"MOVS") == 0 ){
+        move(4,0);
+        printw("MOVS");
+        refresh();
 		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
-		c=instruction.op2_value; //--> Valor primer operando
-		tipo2=instruction.op2_type
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		b=instruction.op2_value; //--> Valor primer operando
+		tipo2=instruction.op2_type;
+		c=instruction.op3_value; //--> Valor primer operando
+		tipo3=instruction.op3_type;
 		// ... Igual para los otros operandos
 		Rd=regs[a];
-		Rd=ADC(Rd,c)
+		Rm=regs[b];
+		if(tipo2=='#'){
+		Rd=MOVS(Rd,b,bands);
+		regs[a]=Rd;
+		}
+		if(tipo2=='R'){
+		Rd=MOVS(Rd,Rm,bands);
+		regs[a]=Rd;
+		}
 	}
 	if( strcmp(instruction.mnemonic,"ADCS") == 0 ){
+	    move(4,0);
+        printw("ADCS");
+        refresh();
 		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
 		b=instruction.op2_value; //--> Valor primer operando
+<<<<<<< HEAD
 		tipo2=instruction.op2_type
 		
+=======
+		tipo2=instruction.op2_type;
+		c=instruction.op3_value; //--> Valor primer operando
+		tipo3=instruction.op3_type;
+		// ... Igual para los otros operandos
+		if(tipo3=='N'){
+>>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
 		Rd=regs[a];
 		Rm=regs[b];
-		Rd=ADC(Rd,Rm,1)
+		Rd=ADCS(Rd,Rm,1,bands);
+		regs[a]=Rd;
+		}
+		else{
+		Rd=regs[b];
+		Rm=regs[c];
+		Rd=ADCS(Rd,Rm,1,bands);
+		regs[b]=Rd;
+		}
 	}
 	if( strcmp(instruction.mnemonic,"LSLS") == 0 ){
+	    move(4,0);
+        printw("LSLS");
+        refresh();
 		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
 		b=instruction.op2_value; //--> Valor primer operando
-		tipo2=instruction.op2_type
+		tipo2=instruction.op2_type;
+		c=instruction.op3_value;
+		tipo3=instruction.op2_type;
 		// ... Igual para los otros operandos
 		Rd=regs[a];
 		Rm=regs[b];
-		Rd=LSLS(Rd,Rm)
+		Rd=LSLS(Rd,Rm,c,bands);
+		regs[a]=Rd;
 	}
 	if( strcmp(instruction.mnemonic,"ADDS") == 0 ){
+	    move(4,0);
+        printw("ADDS");
+        refresh();
 		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
 		b=instruction.op2_value; //--> Valor primer operando
-		tipo2=instruction.op2_type
+		tipo2=instruction.op2_type;
+		c=instruction.op3_value; //--> Valor primer operando
+		tipo3=instruction.op3_type;
 		// ... Igual para los otros operandos
+		if(tipo3=='N'){
 		Rd=regs[a];
 		Rm=regs[b];
-		Rd=ADDS(Rd,Rm)
+		Rd=ADDS(Rd,Rm,bands);
+		regs[a]=Rd;
+		}
+		else{
+		Rd=regs[b];
+		Rm=regs[c];
+		Rd=ADDS(Rd,Rm,bands);
+		regs[b]=Rd;
+		}
 	}
 	if( strcmp(instruction.mnemonic,"SUBS") == 0 ){
+	    move(4,0);
+        printw("SUBS");
+        refresh();
 		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
 		b=instruction.op2_value; //--> Valor primer operando
-		tipo2=instruction.op2_type
+		tipo2=instruction.op2_type;
+		c=instruction.op3_value; //--> Valor primer operando
+		tipo3=instruction.op3_type;
 		// ... Igual para los otros operandos
+		if(tipo3=='N'){
 		Rd=regs[a];
 		Rm=regs[b];
-		Rd=SUBS(Rd,Rm)
+		Rd=SUBS(Rd,Rm,bands);
+		regs[a]=Rd;
+		}
+		else{
+		Rd=regs[b];
+		Rm=regs[c];
+		Rd=SUBS(Rd,Rm,bands);
+		regs[b]=Rd;
+		}
 	}
 	if( strcmp(instruction.mnemonic,"LSRS") == 0 ){
+	    move(4,0);
+        printw("LSRS");
+        refresh();
 		a=instruction.op1_value; //--> Valor primer operando
-		tipo1=instruction.op1_type  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
+		tipo1=instruction.op1_type;  //--> Tipo primer operando (R->Registro #->Numero N->Ninguno)
 		b=instruction.op2_value; //--> Valor primer operando
-		tipo2=instruction.op2_type
+		tipo2=instruction.op2_type;
+		c=instruction.op3_value;
+		tipo3=instruction.op2_type;
 		// ... Igual para los otros operandos
 		Rd=regs[a];
 		Rm=regs[b];
-		Rd=LSRS(Rd,Rm)
+		Rd=LSRS(Rd,Rm,c,bands);
+		regs[a]=Rd;
 	}
-	return pc;
 }
 
 
