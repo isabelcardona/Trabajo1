@@ -9,25 +9,20 @@
 
 int main()
 {
-<<<<<<< HEAD
-    uint32_t regs[13]={0},rd,rm,imm,r; /** definicion de las variables regs y bands  como arreglos de los registros*/
-    int i,j,k,num_instructions,bands[4]={0},pc=0; /**  y las banderas, operandos de las instrucciones.*/
-=======
-    uint32_t regs[13]={0},rd,rm,imm,r;
+    uint32_t regs[16]={0},rd,rm,imm,r;
     int i,j,k,num_instructions,bands[4]={0},pc=0;
->>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
 		ins_t read;
 		char** instructions;
 		instruction_t instruction;
 
-		num_instructions = readFile("code.txt", &read); /** funcion que lee las instrucciones desde un archivo .txt y las implementa en el proceso.*/
-		if(num_instructions==-1)                        /** funcion que cierra el programa cuando encuentra un error al subir el archivo de texto */
+		num_instructions = readFile("code.txt", &read);
+		if(num_instructions==-1)
 			return 0;
 
-		if(read.array==NULL)                             /** condicion de retorno cuando llegue al final del archivo de las instrucciones */
+		if(read.array==NULL)
 			return 0;
 
-		instructions = read.array; /** Arreglo con las instrucciones */
+		instructions = read.array; /* Arreglo con las instrucciones */
 	//---------------------------//
 
 
@@ -36,20 +31,7 @@ int main()
 		Llama la función que separa el mnemonico y los operandos
 		Llama la instrucción que decodifica y ejecuta la instrucción
 	*/
-<<<<<<< HEAD
-	for(pc=0; pc<num_instructions; pc++)     //proseso para que el programa contador (pc)
-                                             //realize instrucciones ejecute funciones con
-    {                                        //instrucciones de posiciones positivas
-
-    if(pc==-2)     /**condicion para que el pc que va de dos en dos inicie en cero*/
-	{
-=======
-	for(pc=0; pc<num_instructions; pc++){
-            //pc=pc-2;
-    if(pc==-2){
->>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
-        pc=pc+2;
-    }
+	for(regs[13]=0; regs[13]<num_instructions; regs[13]++){
 	// Esto debe ser ciclico para la lectura de todas las instrucciones, de acuerdo
 	// al valor del PC (Program Counter)
 	initscr();		/* Inicia modo curses */
@@ -71,33 +53,21 @@ int main()
 
 	attron(COLOR_PAIR(1));	/* Activa el color verde para el
 							   texto y negro para el fondo Pair 1*/
-<<<<<<< HEAD
-    move(0, 20);  /**posicion del cursor en filas y columnas*/
-=======
     move(0, 20);
->>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
     printw("EMULADOR DE PROCESADOR ARM Cortex-M0_V6");
 	refresh();	/* Imprime en la pantalla
 					Sin esto el printw no es mostrado */
 					//getch();
-    instruction = getInstruction(instructions[pc]); // Instrucción en la posición 0
-	decodeInstruction(instruction, regs, bands, pc); // Debe ser modificada de acuerdo a cada código
+    instruction = getInstruction(instructions[regs[13]]); // Instrucción en la posición 0
+	decodeInstruction(instruction, regs, bands); // Debe ser modificada de acuerdo a cada código
     //registros[instruction.op1_value] = instruction.op2_value;
 	//------- No modificar ------//
 
     j=0;
     k=0;
-<<<<<<< HEAD
-    if(pc==0)
-	{
-    for(i=6;i<17;i=i+2) /** proceso que recorre las filas y columnas */
-	{
-    if((j==5)||(j==9)){  /** proceso que recorre cada registro*/
-=======
-    if(pc==0){
+    if(regs[13]==0){
     for(i=6;i<17;i=i+2){
     if((j==5)||(j==9)){
->>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
         k=k+22;
         i=6;
     }
@@ -135,20 +105,6 @@ int main()
 	j++;
     }
 
-<<<<<<< HEAD
-    move(18, 0); /**posicion de inicio fila columna donde se muestran las banderas*/
-
-    printw("N=%x",bands[0]);   /**imprime la bandera de negativo*/
-    refresh();
-    move(19, 0);
-    printw("Z=%x",bands[1]);   /**imprime la bandera de cero*/
-    refresh();
-    move(20, 0);
-    printw("C=%x",bands[2]);  /**imprime la bandera de acarreo*/
-    refresh();
-    move(21, 0);
-    printw("V=%x",bands[3]);  /**imprime la bandera de sobreflujo*/
-=======
     move(18, 0);
 
     printw("N=%x",bands[0]);
@@ -161,7 +117,6 @@ int main()
     refresh();
     move(21, 0);
     printw("V=%x",bands[3]);
->>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
     refresh();
 	/* Libera la memoria reservada para las instrucciones */
     getch();
@@ -174,15 +129,9 @@ int main()
 	//---------------------------//
 
 	endwin();	/* Finaliza el modo curses */
-<<<<<<< HEAD
-
-	return 0;
-}
-=======
 
 	return 0;
 }
 
 
 
->>>>>>> 8cb513235e6436d6163cdc9eeb515e60dbeef585
