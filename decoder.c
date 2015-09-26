@@ -4,11 +4,11 @@
 #include "libreria.h"
 
 char tipo1, tipo2, tipo3;
-uint32_t Rd, Rm,a, b, c;
+uint32_t Rd, Rm,a, b, c, temp, R[8];
+int aux[8]={0};
 
 void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands)
 {
-    int lr;
 
 
     if( (strcmp(instruction.mnemonic,"B") == 0)){
@@ -125,12 +125,16 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		Rd=regs[a];
 		Rm=regs[b];
 		if(tipo2=='#'){
+        temp=bands[3];
 		Rd=MOVS(Rd,b,bands);
 		regs[a]=Rd;
+		bands[3]=temp;
 		}
 		if(tipo2=='R'){
 		Rd=MOVS(Rd,Rm,bands);
+		temp=bands[3];
 		regs[a]=Rd;
+		bands[3]=temp;
 		}
 	}
 	if( strcmp(instruction.mnemonic,"ADCS") == 0 ){
@@ -147,7 +151,9 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		if(tipo3=='N'){
 		Rd=regs[a];
 		Rm=regs[b];
+		temp=bands[3];
 		Rd=ADCS(Rd,Rm,1,bands);
+		bands[3]=temp;
 		regs[a]=Rd;
 		}
 		else{
@@ -237,6 +243,9 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		Rd=LSRS(Rd,Rm,c,bands);
 		regs[a]=Rd;
 	}
+	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){
+
+
 }
 
 
@@ -279,9 +288,7 @@ instruction_t getInstruction(char* instStr)
 		instruction.op3_type  = 'N';
 		instruction.op3_value = 0;
 	}
-
-	free(split);
-
+    free(split);
 	return instruction;
 }
 
@@ -327,4 +334,46 @@ int countLines(FILE* fp)
 
 	return lines;
 }
+
+int bitcount(instruction_t instruction, uint32_t R, int* aux){
+    int cont=0;
+    if((instruction.op1_type=='R')||(instruction.op1_type=='L')){
+        cont++;
+        aux[0]=instruction.op1_value;
+    }
+    if((instruction.op2_type=='R')||(instruction.op2_type=='L')){
+        cont++;
+        aux[1]=instruction.op2_value;
+    }
+    if((instruction.op3_type=='R')||(instruction.op3_type=='L')){
+        cont++;
+        aux[2]=instruction.op3_value;
+    }
+    if((instruction.op4_type=='R')||(instruction.op4_type=='L')){
+        cont++;
+        aux[3]=instruction.op4_value;
+    }
+    if((instruction.op5_type=='R')||(instruction.op5_type=='L')){
+        cont++;
+        aux[4]=instruction.op5_value;
+    }
+    if((instruction.op6_type=='R')||(instruction.op6_type=='L')){
+        cont++;
+        aux[5]=instruction.op6_value;
+    }
+    if((instruction.op7_type=='R')||(instruction.op7_type=='L')){
+        cont++;
+        aux[6]=instruction.op7_value;
+    }
+    if((instruction.op8_type=='R')||(instruction.op8_type=='L')){
+        cont++;
+        aux[7]=instruction.op8_value;
+    }
+    return cont;
+}
+}
+
+
+
+
 

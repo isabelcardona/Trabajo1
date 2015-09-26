@@ -165,3 +165,4 @@ uint32_t ASR(uint32_t rd,uint32_t rm, uint32_t x, uint32_t* bands)
     fbands(rd,rm,bands);
     return rd;
 }
+

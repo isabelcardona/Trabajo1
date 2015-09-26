@@ -19,9 +19,19 @@ typedef struct
 	char op1_type;
 	char op2_type;
 	char op3_type;
+	char op4_type;
+	char op5_type;
+	char op6_type;
+	char op7_type;
+	char op8_type;
 	uint32_t op1_value;
 	uint32_t op2_value;
 	uint32_t op3_value;
+	uint32_t op4_value;
+	uint32_t op5_value;
+	uint32_t op6_value;
+	uint32_t op7_value;
+	uint32_t op8_value;
 }instruction_t;
 
 
@@ -53,5 +63,7 @@ int readFile(char* filename, ins_t* instructions);
 	\return Entero con la cantidad de líneas del archivo.
 */
 int countLines(FILE* fp);
+
+int bitcount(instruction_t instruction, uint32_t R, int* aux);
 
 #endif /*_DECODER_H_*/

@@ -10,6 +10,7 @@
 int main()
 {
     uint32_t regs[16]={0},rd,rm,imm,r;
+    regs[13]=0x28000000; // posicion de sp para una memoria de 64M
     int i,j,k,num_instructions,bands[4]={0},pc=0;
 		ins_t read;
 		char** instructions;
@@ -44,12 +45,12 @@ int main()
 
 	init_pair(1, COLOR_GREEN, COLOR_BLACK);	/* Pair 1 -> Texto verde
 											   fondo Negro */
-
-
-	/*border( ACS_VLINE, ACS_VLINE,
+		/*border( ACS_VLINE, ACS_VLINE,
 			ACS_HLINE, ACS_HLINE,
 			ACS_ULCORNER, ACS_URCORNER,
 			ACS_LLCORNER, ACS_LRCORNER	);*/
+
+
 
 	attron(COLOR_PAIR(1));	/* Activa el color verde para el
 							   texto y negro para el fondo Pair 1*/
@@ -58,6 +59,7 @@ int main()
 	refresh();	/* Imprime en la pantalla
 					Sin esto el printw no es mostrado */
 					//getch();
+
     instruction = getInstruction(instructions[regs[13]]); // Instrucción en la posición 0
 	decodeInstruction(instruction, regs, bands); // Debe ser modificada de acuerdo a cada código
     //registros[instruction.op1_value] = instruction.op2_value;
@@ -132,6 +134,8 @@ int main()
 
 	return 0;
 }
+
+
 
 
 
