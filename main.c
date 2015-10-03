@@ -11,7 +11,7 @@ int main()
 {
 
     uint32_t regs[16]={0},rd,rm,imm,r, mem[50]={0}, address=0, addr[128]={0};
-    regs[13]=0x2000007f; // posicion de sp para una memoria de 128 bytes;
+    regs[13]=0x2000007f; /* posicion de sp para una memoria de 128 bytes */
     int i,j,k,num_instructions,bands[4]={0},pc=0;
 		ins_t read;
 		char** instructions;
@@ -57,7 +57,7 @@ int main()
 
 
 
-            num_instructions = readFile("code.txt", &read);
+            num_instructions = readFile("code.txt", &read); /* se obtienen las instrucciones contenidas en el archivo de texto */
 		if(num_instructions==-1)
 			return 0;
 
@@ -66,7 +66,7 @@ int main()
 
 		instructions = read.array;
     for(i=0;i<128;i++){
-        addr[i]=0x20000000+i;
+        addr[i]=0x20000000+i;    /* direccion en la que inicia la memoria hasta llegar al limite de 128 bytes */
     }
 
 

@@ -13,15 +13,15 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 {
     ptr=regs;
 
-
-    if( (strcmp(instruction.mnemonic,"B") == 0)){
+	/* condiciones de salto*/
+    if( (strcmp(instruction.mnemonic,"B") == 0)){    /* salta a un valor inmediato  */ 
             regs[15]=instruction.op1_value;
-    }
-    if( (strcmp(instruction.mnemonic,"BX") == 0)){
+    }                                              
+    if( (strcmp(instruction.mnemonic,"BX") == 0)){   /* salta a un inmediato o a LR */
             regs[15]=instruction.op1_value-1;
     }
 
-    if( (strcmp(instruction.mnemonic,"BL") == 0)){
+    if( (strcmp(instruction.mnemonic,"BL") == 0)){  
             regs[14]=regs[15]+1;
             if(instruction.op1_type=='#'){
                 regs[15]=instruction.op1_value;
@@ -100,7 +100,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
             regs[15]+=instruction.op1_value;
     }
 
-
+	/* condiciones de las instrucciones que se muestran en la interfaz */
     if( strcmp(instruction.mnemonic,"CMP") == 0 ){
         move(4,0);
         printw("CMP ");
@@ -246,15 +246,15 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		Rd=LSRS(Rd,Rm,c,bands);
 		regs[a]=Rd;
 	}
-	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){
+	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){       /* instruccion que guarda registros en la memoria  */ 
         move(4,0);
         printw("PUSH");
         refresh();
         x=bitcount(instruction);
-        address=regs[13]-(4*x);
+        address=regs[13]-(4*x);    /* address es igual a la posicion en la que debe quedar el sp "regs[13]"   */    
         p=0;
         for(i=0;i<14;i++){
-            if(instruction.registers_list[i]==1){
+            if(instruction.registers_list[i]==1){               
                 aux[p]=regs[i];
                 memA(address, regs, i, ptr, mem, addr);
                 address+=4;
@@ -263,7 +263,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
         }
         regs[13]=regs[13]-(4*x);
 	}
-	if( strcmp(instruction.mnemonic,"POP") == 0 ){
+	if( strcmp(instruction.mnemonic,"POP") == 0 ){        /* instruccion que saca los registros de la memoria y los ubica en otros registros */
 	    move(4,0);
         printw("POP ");
         refresh();
@@ -283,14 +283,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
             printf("\n%x",mem[i]);
         }
 	}
-	/*if( strcmp(instruction.mnemonic,"LDR") == 0 )
-    {
-       move(4,0);
-       printw("LDR");
-       refresh();
-       offset_addr =
-
-	}*/
+	
 }
 
 
@@ -413,10 +406,10 @@ int bitcount(instruction_t instruction){
     return cont;
 }
 
-void memA(uint32_t* address, uint32_t* regs, int h, char* p, uint32_t* mem, uint32_t* addr){
+void memA(uint32_t* address, uint32_t* regs, int h, char* p, uint32_t* mem, uint32_t* addr){  /* memoria en la que quedan guardados los registros */
     int k=0;
-    for(j=0;j<128;j++){
-        if(addr[j]==address){
+    for(j=0;j<128;j++){                   /* recorre el tamaño de la memoria, en este caso de 128 bytes */
+        if(addr[j]==address){             /* addr es el arreglo con las direcciones que se le asigna a la memoria */
             for(k=0;k<4;k++){
                 mem[k]=*(p+h+k);
             }
