@@ -3,98 +3,101 @@
 #include "instrucciones.h"
 #include "libreria.h"
 
-char tipo1, tipo2, tipo3;
-uint32_t Rd, Rm,a, b, c, temp, R[8];
-int aux[8]={0};
+char tipo1, tipo2, tipo3, *ptr;
+uint32_t Rd, Rm,a, b, c, temp, aux[16];
+int x=0, i, j, p=0;
 
-void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands)
+
+
+void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr)
 {
+    ptr=regs;
 
 
     if( (strcmp(instruction.mnemonic,"B") == 0)){
-            regs[13]=instruction.op1_value-1;
+            regs[15]=instruction.op1_value;
     }
     if( (strcmp(instruction.mnemonic,"BX") == 0)){
-            regs[13]=instruction.op1_value-1;
+            regs[15]=instruction.op1_value-1;
     }
 
     if( (strcmp(instruction.mnemonic,"BL") == 0)){
-            regs[14]=regs[13]+1;
+            regs[14]=regs[15]+1;
             if(instruction.op1_type=='#'){
-                regs[13]=instruction.op1_value;
+                regs[15]=instruction.op1_value;
             }
             if(instruction.op1_type=='R'){
-                regs[13]=regs[instruction.op1_value];
+                regs[15]=regs[instruction.op1_value];
             }
     }
     if( (strcmp(instruction.mnemonic,"BLX") == 0)){
             uint32_t temp;
             temp=regs[14];
-            regs[14]=regs[13]+1;
+            regs[14]=regs[15]+1;
             if(instruction.op1_type=='#'){
-                regs[13]=instruction.op1_value;
+                regs[15]=instruction.op1_value;
             }
             if(instruction.op1_type=='R'){
-                regs[13]=regs[instruction.op1_value];
+                regs[15]=regs[instruction.op1_value];
             }
             if(instruction.op1_type=='L'){
-                regs[13]=temp;
+                regs[15]=temp;
             }
     }
 
     if( (strcmp(instruction.mnemonic,"BEQ") == 0) && (bands[1]==1)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BNE") == 0) && (bands[1]==0)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BCS") == 0) && (bands[2]==1)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BCC") == 0) && (bands[2]==0)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BMI") == 0) && (bands[0]==1)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BPL") == 0) && (bands[0]==0)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BVS") == 0) && (bands[3]==1)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BVC") == 0) && (bands[3]==0)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BHI") == 0) && (bands[2]==1) && (bands[1]==0)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
     if( (strcmp(instruction.mnemonic,"BLS") == 0) && (bands[2]==0) && (bands[1]==1)){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
     if( (strcmp(instruction.mnemonic,"BGE") == 0) && (bands[0]==bands[3])){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
     if( (strcmp(instruction.mnemonic,"BLT") == 0) && (bands[0]!=bands[3])){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
     if( (strcmp(instruction.mnemonic,"BGT") == 0) && (bands[1]==0) && (bands[0]==bands[3])){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
     if( (strcmp(instruction.mnemonic,"BLE") == 0) && (bands[1]==0) && (bands[0]!=bands[3])){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
     if( (strcmp(instruction.mnemonic,"BAL") == 0) ){
-            regs[13]+=instruction.op1_value;
+            regs[15]+=instruction.op1_value;
     }
 
 
@@ -244,15 +247,62 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		regs[a]=Rd;
 	}
 	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){
+        move(4,0);
+        printw("PUSH");
+        refresh();
+        x=bitcount(instruction);
+        address=regs[13]-(4*x);
+        p=0;
+        for(i=0;i<14;i++){
+            if(instruction.registers_list[i]==1){
+                aux[p]=regs[i];
+                memA(address, regs, i, ptr, mem, addr);
+                address+=4;
+                p++;
+            }
+        }
+        regs[13]=regs[13]-(4*x);
+	}
+	if( strcmp(instruction.mnemonic,"POP") == 0 ){
+	    move(4,0);
+        printw("POP ");
+        refresh();
+        x=bitcount(instruction);
+        address=regs[13];
+        p=0;
+        for(i=0;i<14;i++){
+            if(instruction.registers_list[i]==1){
+                                printf("b");
+                               regs[i]=aux[p];
+                               address+=4;
+                               p++;
+                            }
+                    }
+        regs[13]=regs[13]+(4*x);
+        for(i=0;i<50;i++){
+            printf("\n%x",mem[i]);
+        }
+	}
+	/*if( strcmp(instruction.mnemonic,"LDR") == 0 )
+    {
+       move(4,0);
+       printw("LDR");
+       refresh();
+       offset_addr =
 
-
+	}*/
 }
 
 
 instruction_t getInstruction(char* instStr)
 {
-	instruction_t instruction;
-	char* split = (char*)malloc(strlen(instStr));
+	instruction_t instruction=
+	{
+		.registers_list = {0},
+		.op3_type  = 'N',
+		.op3_value = 0
+	};
+	char* split = (char*)malloc(strlen(instStr)+1);
 	int num=0;
 
 	strcpy(split, instStr);
@@ -265,30 +315,52 @@ instruction_t getInstruction(char* instStr)
 	{
 		switch(num){
 			case 1:
-				instruction.op1_type  = split[0];
-				instruction.op1_value = (uint32_t)strtol(split+1, NULL, 0);
+				if(split[0] == '{'){
+					instruction.op1_type  = split[0];
+					split++;
+					do{
+						if(split[0]=='L')
+							instruction.registers_list[14] = 1;
+						else if(split[0]=='P')
+							instruction.registers_list[15] = 1;
+						else
+							instruction.registers_list[(uint8_t)strtoll(split+1, NULL, 0)] = 1;
+
+						split = strtok(NULL, ",");
+					}while(split != NULL);
+				}else{
+					instruction.op1_type  = split[0];
+					instruction.op1_value = (uint32_t)strtoll(split+1, NULL, 0);
+				}
 				break;
 
 			case 2:
 				instruction.op2_type  = split[0];
-				instruction.op2_value = (uint32_t)strtol(split+1, NULL, 0);
+				instruction.op2_value = (uint32_t)strtoll(split+1, NULL, 0);
 				break;
 
 			case 3:
 				instruction.op3_type  = split[0];
-				instruction.op3_value = (uint32_t)strtol(split+1, NULL, 0);
+				instruction.op3_value = (uint32_t)strtoll(split+1, NULL, 0);
 				break;
 		}
-
-		split = strtok(NULL, " ,.");
-		num++;
+		if(split != NULL){
+			split = strtok(NULL, " ,.");
+			num++;
+		}
 	}
 
-	if(num==3){
-		instruction.op3_type  = 'N';
-		instruction.op3_value = 0;
+	if(instruction.op1_type == 'L'){
+		instruction.op1_value = 14;
+		instruction.op1_type = 'R';
 	}
-    free(split);
+
+	if(instruction.op1_type == '{'){
+		instruction.op1_type = 'P';
+	}
+
+	free(split);
+
 	return instruction;
 }
 
@@ -303,12 +375,12 @@ int readFile(char* filename, ins_t* instructions)
 	if( fp==NULL )
 		return -1;	/* Error al abrir el archivo */
 
-	lines = countLines(fp)-1;	/* Cantidad de líneas*/
+	lines = countLines(fp);	/* Cantidad de líneas*/
 
 	/* Asignación dinámica de memoria para cada instrucción */
 	instructions->array = (char**)malloc(lines*sizeof(char*));
 	while ( fgets(buffer, 50, fp) != NULL && line<lines ){
-        instructions->array[line] = (char*)malloc(strlen(buffer)*sizeof(char));
+        instructions->array[line] = (char*)malloc((strlen(buffer)+1)*sizeof(char));
 		strcpy(instructions->array[line], buffer);
 		line++;
  	}
@@ -322,58 +394,35 @@ int readFile(char* filename, ins_t* instructions)
 int countLines(FILE* fp)
 {
 	int lines=0;
-	int ch;
+	char buffer[50];
 
-	while(!feof(fp))
-	{
-	  ch = fgetc(fp);
-	  if(ch == '\n')
+	while( fgets(buffer, 50, fp) != NULL )
 		lines++;
-	}
+
 	rewind(fp);
 
 	return lines;
 }
-
-int bitcount(instruction_t instruction, uint32_t R, int* aux){
+int bitcount(instruction_t instruction){
     int cont=0;
-    if((instruction.op1_type=='R')||(instruction.op1_type=='L')){
-        cont++;
-        aux[0]=instruction.op1_value;
-    }
-    if((instruction.op2_type=='R')||(instruction.op2_type=='L')){
-        cont++;
-        aux[1]=instruction.op2_value;
-    }
-    if((instruction.op3_type=='R')||(instruction.op3_type=='L')){
-        cont++;
-        aux[2]=instruction.op3_value;
-    }
-    if((instruction.op4_type=='R')||(instruction.op4_type=='L')){
-        cont++;
-        aux[3]=instruction.op4_value;
-    }
-    if((instruction.op5_type=='R')||(instruction.op5_type=='L')){
-        cont++;
-        aux[4]=instruction.op5_value;
-    }
-    if((instruction.op6_type=='R')||(instruction.op6_type=='L')){
-        cont++;
-        aux[5]=instruction.op6_value;
-    }
-    if((instruction.op7_type=='R')||(instruction.op7_type=='L')){
-        cont++;
-        aux[6]=instruction.op7_value;
-    }
-    if((instruction.op8_type=='R')||(instruction.op8_type=='L')){
-        cont++;
-        aux[7]=instruction.op8_value;
+    for(i=0;i<16;i++){
+        if(instruction.registers_list[i]==1){
+            cont++;
+        }
     }
     return cont;
 }
+
+void memA(uint32_t* address, uint32_t* regs, int h, char* p, uint32_t* mem, uint32_t* addr){
+    int k=0;
+    for(j=0;j<128;j++){
+        if(addr[j]==address){
+            for(k=0;k<4;k++){
+                mem[k]=*(p+h+k);
+            }
+        }
+    }
 }
-
-
 
 
 

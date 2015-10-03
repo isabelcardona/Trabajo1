@@ -12,27 +12,19 @@ typedef struct
 	char** array;
 }ins_t;
 
-
 typedef struct
 {
 	char mnemonic[10];
 	char op1_type;
 	char op2_type;
 	char op3_type;
-	char op4_type;
-	char op5_type;
-	char op6_type;
-	char op7_type;
-	char op8_type;
 	uint32_t op1_value;
 	uint32_t op2_value;
 	uint32_t op3_value;
-	uint32_t op4_value;
-	uint32_t op5_value;
-	uint32_t op6_value;
-	uint32_t op7_value;
-	uint32_t op8_value;
+	uint32_t  registers_list[16];
 }instruction_t;
+
+
 
 
 /** \fn void decodeInstruction(instruction_t instruction)
@@ -40,7 +32,7 @@ typedef struct
     \param instruction instrucción a decodificar y ejecutar.
 */
 
-void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands);
+void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr);
 
 /** \fn instruction_t getInstruction(char* instStr)
     \brief Obtiene la instrucción separada por partes.
@@ -64,6 +56,8 @@ int readFile(char* filename, ins_t* instructions);
 */
 int countLines(FILE* fp);
 
-int bitcount(instruction_t instruction, uint32_t R, int* aux);
+int bitcount(instruction_t instruction);
+
+void memA(uint32_t* address, uint32_t* regs, int h, char* p, uint32_t* mem, uint32_t* addr);
 
 #endif /*_DECODER_H_*/
