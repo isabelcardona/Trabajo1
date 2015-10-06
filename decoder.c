@@ -3,7 +3,7 @@
 #include "instrucciones.h"
 #include "libreria.h"
 
-char tipo1, tipo2, tipo3, *ptr;
+char tipo1, tipo2, tipo3, *ptr, *xp;
 uint32_t Rd, Rm,a, b, c, temp, aux[16];
 int x=0, i, j, p=0;
 
@@ -11,17 +11,18 @@ int x=0, i, j, p=0;
 
 void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr)
 {
-    ptr=regs;
+    ptr=aux;
+    xp=regs;
 
-	/* condiciones de salto*/
-    if( (strcmp(instruction.mnemonic,"B") == 0)){    /* salta a un valor inmediato  */ 
+
+    if( (strcmp(instruction.mnemonic,"B") == 0)){
             regs[15]=instruction.op1_value;
-    }                                              
-    if( (strcmp(instruction.mnemonic,"BX") == 0)){   /* salta a un inmediato o a LR */
+    }
+    if( (strcmp(instruction.mnemonic,"BX") == 0)){
             regs[15]=instruction.op1_value-1;
     }
 
-    if( (strcmp(instruction.mnemonic,"BL") == 0)){  
+    if( (strcmp(instruction.mnemonic,"BL") == 0)){
             regs[14]=regs[15]+1;
             if(instruction.op1_type=='#'){
                 regs[15]=instruction.op1_value;
@@ -100,7 +101,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
             regs[15]+=instruction.op1_value;
     }
 
-	/* condiciones de las instrucciones que se muestran en la interfaz */
+
     if( strcmp(instruction.mnemonic,"CMP") == 0 ){
         move(4,0);
         printw("CMP ");
@@ -246,24 +247,24 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		Rd=LSRS(Rd,Rm,c,bands);
 		regs[a]=Rd;
 	}
-	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){       /* instruccion que guarda registros en la memoria  */ 
+	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){
         move(4,0);
         printw("PUSH");
         refresh();
-        x=bitcount(instruction);
-        address=regs[13]-(4*x);    /* address es igual a la posicion en la que debe quedar el sp "regs[13]"   */    
         p=0;
+        x=bitcount(instruction);
+        address=regs[13]-(4*x);
         for(i=0;i<14;i++){
-            if(instruction.registers_list[i]==1){               
+            if(instruction.registers_list[i]==1){
                 aux[p]=regs[i];
-                memA(address, regs, i, ptr, mem, addr);
+                memA(ptr, mem, addr);
                 address+=4;
                 p++;
             }
         }
         regs[13]=regs[13]-(4*x);
 	}
-	if( strcmp(instruction.mnemonic,"POP") == 0 ){        /* instruccion que saca los registros de la memoria y los ubica en otros registros */
+	if( strcmp(instruction.mnemonic,"POP") == 0 ){
 	    move(4,0);
         printw("POP ");
         refresh();
@@ -272,18 +273,242 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
         p=0;
         for(i=0;i<14;i++){
             if(instruction.registers_list[i]==1){
-                                printf("b");
                                regs[i]=aux[p];
                                address+=4;
                                p++;
                             }
                     }
         regs[13]=regs[13]+(4*x);
-        for(i=0;i<50;i++){
-            printf("\n%x",mem[i]);
-        }
 	}
-	
+
+
+	if( strcmp(instruction.mnemonic,"LDR") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("LDR");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
+            imm=(uint32_t)instruction.op3_value*4;
+            offset_addr=regs[instruction.op2_value]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='SP')&&(instruction.op3_type=='#')){
+            imm=(uint32_t)instruction.op3_value*4;
+            offset_addr=regs[13]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='PC')&&(instruction.op3_type=='#')){
+            imm=(uint32_t)instruction.op3_value*4;
+            offset_addr=regs[15]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
+                }
+            }
+       }
+	}
+
+
+	if( strcmp(instruction.mnemonic,"LDRB") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("LDRB");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
+           imm=(uint32_t)instruction.op3_value;
+            offset_addr=regs[instruction.op2_value]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)mem[i];
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)mem[i];
+                }
+            }
+       }
+    }
+
+
+    if( strcmp(instruction.mnemonic,"LDRH") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("LDRH");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
+           imm=(uint32_t)instruction.op3_value*2;
+            offset_addr=regs[instruction.op2_value]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)mem[i]||mem[i+1];
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)mem[i]||mem[i+1];
+                }
+            }
+       }
+    }
+
+
+    if( strcmp(instruction.mnemonic,"LDRSB") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("LDRSB");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=(int32_t)mem[i];
+                }
+            }
+       }
+    }
+
+
+    if( strcmp(instruction.mnemonic,"LDRSH") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("LDRSH");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    regs[instruction.op1_value]=(int32_t)mem[i]||mem[i+1];
+                }
+            }
+       }
+    }
+
+
+    if( strcmp(instruction.mnemonic,"STR") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("STR");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
+            imm=(uint32_t)instruction.op3_value*4;
+            offset_addr=regs[instruction.op2_value]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr)
+                {
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                    mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    mem[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    mem[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='SP')&&(instruction.op3_type=='#')){
+            imm=(uint32_t)instruction.op3_value*4;
+            offset_addr=regs[13]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                    mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    mem[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    mem[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                    mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    mem[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    mem[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+       }
+    }
+
+
+    if( strcmp(instruction.mnemonic,"STRB") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("STRB");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
+           imm=(uint32_t)instruction.op3_value;
+            offset_addr=regs[instruction.op2_value]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                }
+            }
+       }
+    }
+
+
+    if( strcmp(instruction.mnemonic,"STRH") == 0 )
+    {
+       uint32_t imm, offset_addr;
+       move(4,0);
+       printw("STRH");
+       refresh();
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
+           imm=(uint32_t)instruction.op3_value;
+            offset_addr=regs[instruction.op2_value]+imm;
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                    mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                }
+            }
+       }
+       if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
+            offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            for(i=0;i<128;i++){
+                if(addr[i]==offset_addr){
+                    mem[i]=*(xp+(instruction.op1_value*4));
+                    mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                }
+            }
+       }
+    }
 }
 
 
@@ -406,16 +631,13 @@ int bitcount(instruction_t instruction){
     return cont;
 }
 
-void memA(uint32_t* address, uint32_t* regs, int h, char* p, uint32_t* mem, uint32_t* addr){  /* memoria en la que quedan guardados los registros */
-    int k=0;
-    for(j=0;j<128;j++){                   /* recorre el tamaño de la memoria, en este caso de 128 bytes */
-        if(addr[j]==address){             /* addr es el arreglo con las direcciones que se le asigna a la memoria */
-            for(k=0;k<4;k++){
-                mem[k]=*(p+h+k);
-            }
-        }
+void memA(char* ptr, uint32_t* mem, uint32_t* addr){
+    int k;
+    for(k=0;k<20;k++){
+        mem[k]=*(ptr+k);
     }
 }
+
 
 
 
