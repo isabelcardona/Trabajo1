@@ -32,8 +32,7 @@ typedef struct
     \param instruction instrucción a decodificar y ejecutar.
 */
 
-void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr);
-
+void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr, uint32_t* flash_mem, uint32_t* addr_flash, uint32_t* in_out, uint32_t* addr_inout);
 /** \fn instruction_t getInstruction(char* instStr)
     \brief Obtiene la instrucción separada por partes.
     \param instrStr cadena que contiene la instrucción.
@@ -58,6 +57,6 @@ int countLines(FILE* fp);
 
 int bitcount(instruction_t instruction);
 
-void memA(uint32_t* address, uint32_t* regs, int h, char* p, uint32_t* mem, uint32_t* addr);
+void memA(char* p, uint32_t* mem, uint32_t* addr);
 
 #endif /*_DECODER_H_*/

@@ -9,7 +9,7 @@ int x=0, i, j, p=0;
 
 
 
-void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr)
+void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr, uint32_t* flash_mem, uint32_t* addr_flash, uint32_t* in_out, uint32_t* addr_inout)
 {
     ptr=aux;
     xp=regs;
@@ -18,8 +18,15 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
     if( (strcmp(instruction.mnemonic,"B") == 0)){
             regs[15]=instruction.op1_value;
     }
+
     if( (strcmp(instruction.mnemonic,"BX") == 0)){
-            regs[15]=instruction.op1_value-1;
+            if(instruction.op1_type=='L'){
+                temp=regs[14];
+                regs[15]=temp;
+            }
+    else{
+            regs[15]=instruction.op1_value;
+    }
     }
 
     if( (strcmp(instruction.mnemonic,"BL") == 0)){
@@ -291,36 +298,100 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
             imm=(uint32_t)instruction.op3_value*4;
             offset_addr=regs[instruction.op2_value]+imm;
+            if(offset_addr<0x20000000){
+               for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=flash_mem[i]||flash_mem[i+1]||flash_mem[i+2]||flash_mem[i+3];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+               for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=in_out[i]||in_out[i+1]||in_out[i+2]||in_out[i+3];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
                 }
             }
        }
+       }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='SP')&&(instruction.op3_type=='#')){
             imm=(uint32_t)instruction.op3_value*4;
             offset_addr=regs[13]+imm;
+            if(offset_addr<0x20000000){
+               for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=flash_mem[i]||flash_mem[i+1]||flash_mem[i+2]||flash_mem[i+3];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+               for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=in_out[i]||in_out[i+1]||in_out[i+2]||in_out[i+3];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
                 }
+            }
             }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='PC')&&(instruction.op3_type=='#')){
             imm=(uint32_t)instruction.op3_value*4;
             offset_addr=regs[15]+imm;
+            if(offset_addr<0x20000000){
+               for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=flash_mem[i]||flash_mem[i+1]||flash_mem[i+2]||flash_mem[i+3];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+               for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=in_out[i]||in_out[i+1]||in_out[i+2]||in_out[i+3];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000){
+               for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=flash_mem[i]||flash_mem[i+1]||flash_mem[i+2]||flash_mem[i+3];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+               for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=in_out[i]||in_out[i+1]||in_out[i+2]||in_out[i+3];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=mem[i]||mem[i+1]||mem[i+2]||mem[i+3];
                 }
+            }
             }
        }
 	}
@@ -335,18 +406,50 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
            imm=(uint32_t)instruction.op3_value;
             offset_addr=regs[instruction.op2_value]+imm;
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)flash_mem[i];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)in_out[i];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=(uint32_t)mem[i];
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)flash_mem[i];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)in_out[i];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=(uint32_t)mem[i];
                 }
+            }
             }
        }
     }
@@ -361,18 +464,54 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
            imm=(uint32_t)instruction.op3_value*2;
             offset_addr=regs[instruction.op2_value]+imm;
+            if(offset_addr<0x20000000)
+            {
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)flash_mem[i]||flash_mem[i+1];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000)
+            {
+                for(i=0;i<8;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)in_out[i]||in_out[i+1];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=(uint32_t)mem[i]||mem[i+1];
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000)
+            {
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)flash_mem[i]||flash_mem[i+1];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000)
+            {
+                for(i=0;i<8;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(uint32_t)in_out[i]||in_out[i+1];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=(uint32_t)mem[i]||mem[i+1];
                 }
+            }
             }
        }
     }
@@ -386,10 +525,26 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        refresh();
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(int32_t)flash_mem[i];
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=(int32_t)in_out[i];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=(int32_t)mem[i];
                 }
+            }
             }
        }
     }
@@ -403,10 +558,26 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        refresh();
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr>=0x40000000){
+                for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    regs[instruction.op1_value]=(int32_t)in_out[i]||in_out[i+1];
+                }
+            }
+            }
+            if(offset_addr<0x20000000){
+                for(i=0;i<8;i++){
+                if(addr_flash[i]==offset_addr){
+                    regs[instruction.op1_value]=(int32_t)flash_mem[i]||flash_mem[i+1];
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     regs[instruction.op1_value]=(int32_t)mem[i]||mem[i+1];
                 }
+            }
             }
        }
     }
@@ -421,6 +592,29 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
             imm=(uint32_t)instruction.op3_value*4;
             offset_addr=regs[instruction.op2_value]+imm;
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr)
+                {
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                    flash_mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    flash_mem[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    flash_mem[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr)
+                {
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                    in_out[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    in_out[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    in_out[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr)
                 {
@@ -430,10 +624,34 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
                     mem[i+3]=*(xp+(instruction.op1_value*4)+3);
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='SP')&&(instruction.op3_type=='#')){
             imm=(uint32_t)instruction.op3_value*4;
             offset_addr=regs[13]+imm;
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr)
+                {
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                    flash_mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    flash_mem[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    flash_mem[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr)
+                {
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                    in_out[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    in_out[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    in_out[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     mem[i]=*(xp+(instruction.op1_value*4));
@@ -442,9 +660,33 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
                     mem[i+3]=*(xp+(instruction.op1_value*4)+3);
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr)
+                {
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                    flash_mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    flash_mem[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    flash_mem[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr)
+                {
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                    in_out[i+1]=*(xp+(instruction.op1_value*4)+1);
+                    in_out[i+2]=*(xp+(instruction.op1_value*4)+2);
+                    in_out[i+3]=*(xp+(instruction.op1_value*4)+3);
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     mem[i]=*(xp+(instruction.op1_value*4));
@@ -452,6 +694,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
                     mem[i+2]=*(xp+(instruction.op1_value*4)+2);
                     mem[i+3]=*(xp+(instruction.op1_value*4)+3);
                 }
+            }
             }
        }
     }
@@ -466,18 +709,50 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
            imm=(uint32_t)instruction.op3_value;
             offset_addr=regs[instruction.op2_value]+imm;
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_inout[i]==offset_addr){
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     mem[i]=*(xp+(instruction.op1_value*4));
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<33;i++){
+                if(addr_inout[i]==offset_addr){
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     mem[i]=*(xp+(instruction.op1_value*4));
                 }
+            }
             }
        }
     }
@@ -492,20 +767,56 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='#')){
            imm=(uint32_t)instruction.op3_value;
             offset_addr=regs[instruction.op2_value]+imm;
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                    flash_mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                    in_out[i+1]=*(xp+(instruction.op1_value*4)+1);
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     mem[i]=*(xp+(instruction.op1_value*4));
                     mem[i+1]=*(xp+(instruction.op1_value*4)+1);
                 }
             }
+            }
        }
        if((instruction.op1_type=='R')&&(instruction.op2_type=='R')&&(instruction.op3_type=='R')){
             offset_addr=regs[instruction.op2_value]+regs[instruction.op3_value];
+            if(offset_addr<0x20000000){
+                for(i=0;i<33;i++){
+                if(addr_flash[i]==offset_addr){
+                    flash_mem[i]=*(xp+(instruction.op1_value*4));
+                    flash_mem[i+1]=*(xp+(instruction.op1_value*4)+1);
+                }
+            }
+            }
+            if(offset_addr>=0x40000000){
+                for(i=0;i<8;i++){
+                if(addr_inout[i]==offset_addr){
+                    in_out[i]=*(xp+(instruction.op1_value*4));
+                    in_out[i+1]=*(xp+(instruction.op1_value*4)+1);
+                }
+            }
+            }
+            else{
             for(i=0;i<128;i++){
                 if(addr[i]==offset_addr){
                     mem[i]=*(xp+(instruction.op1_value*4));
                     mem[i+1]=*(xp+(instruction.op1_value*4)+1);
                 }
+            }
             }
        }
     }
@@ -637,6 +948,9 @@ void memA(char* ptr, uint32_t* mem, uint32_t* addr){
         mem[k]=*(ptr+k);
     }
 }
+
+
+
 
 
 

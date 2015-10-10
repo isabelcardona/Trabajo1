@@ -10,8 +10,8 @@
 int main()
 {
 
-    uint32_t regs[16]={0},rd,rm,imm,r, mem[50]={0}, address=0, addr[128]={0};
-    regs[13]=0x2000007f; /* posicion de sp para una memoria de 128 bytes */
+    uint32_t regs[16]={0},rd,rm,imm,r, mem[128]={0}, address=0, addr[128]={0}, interrup_regs[33], flash_mem[33], addr_flash[33], in_out[8], addr_inout[8];
+    regs[13]=0x2000007f; // posicion de sp para una memoria de 128 bytes;
     int i,j,k,num_instructions,bands[4]={0},pc=0;
 		ins_t read;
 		char** instructions;
@@ -57,7 +57,7 @@ int main()
 
 
 
-            num_instructions = readFile("code.txt", &read); /* se obtienen las instrucciones contenidas en el archivo de texto */
+            num_instructions = readFile("code.txt", &read);
 		if(num_instructions==-1)
 			return 0;
 
@@ -66,13 +66,20 @@ int main()
 
 		instructions = read.array;
     for(i=0;i<128;i++){
-        addr[i]=0x20000000+i;    /* direccion en la que inicia la memoria hasta llegar al limite de 128 bytes */
+        addr[i]=0x20000000+i;
+    }
+    for(i=0;i<33;i++){
+        addr_flash[i]=0x00000000+i;
+    }
+    for(i=0;i<8;i++){
+        addr_inout[i]=0x40000000+i;
     }
 
-
+while(1){
+    NVIC(interrup_regs, flash_mem, regs, bands, mem);
 for(regs[15]=0; regs[15]<num_instructions; regs[15]++){
     instruction = getInstruction(instructions[regs[15]]); // Instrucción en la posición 0
-	decodeInstruction(instruction, regs, bands, mem, address, addr); // Debe ser modificada de acuerdo a cada código
+	decodeInstruction(instruction, regs, bands, mem, address, addr, flash_mem, flash_mem, in_out, addr_inout); // Debe ser modificada de acuerdo a cada código
     //registros[instruction.op1_value] = instruction.op2_value;
 	//------- No modificar ------//
 
@@ -146,6 +153,7 @@ for(regs[15]=0; regs[15]<num_instructions; regs[15]++){
     refresh();
 	/* Libera la memoria reservada para las instrucciones */
     getch();
+}
 }
 
 
