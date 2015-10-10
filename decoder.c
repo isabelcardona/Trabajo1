@@ -3,7 +3,7 @@
 #include "instrucciones.h"
 #include "libreria.h"
 
-char tipo1, tipo2, tipo3, *ptr, *xp;
+char tipo1, tipo2, tipo3, *ptr, *xp; 
 uint32_t Rd, Rm,a, b, c, temp, aux[16];
 int x=0, i, j, p=0;
 
@@ -11,11 +11,11 @@ int x=0, i, j, p=0;
 
 void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr, uint32_t* flash_mem, uint32_t* addr_flash, uint32_t* in_out, uint32_t* addr_inout)
 {
-    ptr=aux;
-    xp=regs;
+    ptr=aux; 
+    xp=regs;  /* puntero tipo caracter para guardar de 1 a 4 bytes de un registro*/
 
-
-    if( (strcmp(instruction.mnemonic,"B") == 0)){
+/* condiciones para las instrucciones de salto*/
+    if( (strcmp(instruction.mnemonic,"B") == 0)){      
             regs[15]=instruction.op1_value;
     }
 
@@ -133,9 +133,9 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		c=instruction.op3_value; //--> Valor primer operando
 		tipo3=instruction.op3_type;
 		// ... Igual para los otros operandos
-		Rd=regs[a];
-		Rm=regs[b];
-		if(tipo2=='#'){
+		Rd=regs[a];  /* asignacion del primer operando*/
+		Rm=regs[b];  /* asignacion del segundo operando*/
+		if(tipo2=='#'){   
         temp=bands[3];
 		Rd=MOVS(Rd,b,bands);
 		regs[a]=Rd;
@@ -148,7 +148,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		bands[3]=temp;
 		}
 	}
-	if( strcmp(instruction.mnemonic,"ADCS") == 0 ){
+	if( strcmp(instruction.mnemonic,"ADCS") == 0 ){    /* funcion de suma con carry*/
 	    move(4,0);
         printw("ADCS");
         refresh();
@@ -174,7 +174,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		regs[b]=Rd;
 		}
 	}
-	if( strcmp(instruction.mnemonic,"LSLS") == 0 ){
+	if( strcmp(instruction.mnemonic,"LSLS") == 0 ){  /* corrimiento hacia la izquierda */
 	    move(4,0);
         printw("LSLS");
         refresh();
@@ -190,7 +190,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		Rd=LSLS(Rd,Rm,c,bands);
 		regs[a]=Rd;
 	}
-	if( strcmp(instruction.mnemonic,"ADDS") == 0 ){
+	if( strcmp(instruction.mnemonic,"ADDS") == 0 ){   /* suma aritmetica*/
 	    move(4,0);
         printw("ADDS");
         refresh();
@@ -214,7 +214,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		regs[b]=Rd;
 		}
 	}
-	if( strcmp(instruction.mnemonic,"SUBS") == 0 ){
+	if( strcmp(instruction.mnemonic,"SUBS") == 0 ){  /* resta aritmetica */
 	    move(4,0);
         printw("SUBS");
         refresh();
@@ -238,7 +238,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		regs[b]=Rd;
 		}
 	}
-	if( strcmp(instruction.mnemonic,"LSRS") == 0 ){
+	if( strcmp(instruction.mnemonic,"LSRS") == 0 ){  /* corrimiento hacia la derecha*/
 	    move(4,0);
         printw("LSRS");
         refresh();
@@ -254,7 +254,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 		Rd=LSRS(Rd,Rm,c,bands);
 		regs[a]=Rd;
 	}
-	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){
+	if( strcmp(instruction.mnemonic,"PUSH") == 0 ){  /* instruccion que copia datos en la memoria*/
         move(4,0);
         printw("PUSH");
         refresh();
@@ -271,7 +271,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
         }
         regs[13]=regs[13]-(4*x);
 	}
-	if( strcmp(instruction.mnemonic,"POP") == 0 ){
+	if( strcmp(instruction.mnemonic,"POP") == 0 ){  /* instruccion que saca datos de la memoria*/
 	    move(4,0);
         printw("POP ");
         refresh();
@@ -288,8 +288,8 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
         regs[13]=regs[13]+(4*x);
 	}
 
-
-	if( strcmp(instruction.mnemonic,"LDR") == 0 )
+	/*instrucciones  que sacan datos de la memoria por bytes*/
+	if( strcmp(instruction.mnemonic,"LDR") == 0 )   
     {
        uint32_t imm, offset_addr;
        move(4,0);
@@ -582,7 +582,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
        }
     }
 
-
+		/*instrucciones que guardan datos en la memoria*/
     if( strcmp(instruction.mnemonic,"STR") == 0 )
     {
        uint32_t imm, offset_addr;
@@ -823,7 +823,7 @@ void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* band
 }
 
 
-instruction_t getInstruction(char* instStr)
+instruction_t getInstruction(char* instStr)  /*funcion que lee del archivo de texto las instrucciones*/
 {
 	instruction_t instruction=
 	{
@@ -893,7 +893,7 @@ instruction_t getInstruction(char* instStr)
 	return instruction;
 }
 
-int readFile(char* filename, ins_t* instructions)
+int readFile(char* filename, ins_t* instructions)  /* funcion que lee el archivo de texto*/
 {
 	FILE* fp;	/* Puntero a un archivo  */
 	int lines;	/* Cantidad de líneas del archivo */
@@ -920,7 +920,7 @@ int readFile(char* filename, ins_t* instructions)
 }
 
 
-int countLines(FILE* fp)
+int countLines(FILE* fp)  /*funcion que cuenta el numero de lineas que tiene el archivo de texto*/
 {
 	int lines=0;
 	char buffer[50];
@@ -932,7 +932,7 @@ int countLines(FILE* fp)
 
 	return lines;
 }
-int bitcount(instruction_t instruction){
+int bitcount(instruction_t instruction){  /*funcion que indica los operandos activos para las funciones de push y pop*/
     int cont=0;
     for(i=0;i<16;i++){
         if(instruction.registers_list[i]==1){
@@ -942,7 +942,7 @@ int bitcount(instruction_t instruction){
     return cont;
 }
 
-void memA(char* ptr, uint32_t* mem, uint32_t* addr){
+void memA(char* ptr, uint32_t* mem, uint32_t* addr){   /* funcion que asigna valores en la memoria para las funciones push y pop*/
     int k;
     for(k=0;k<20;k++){
         mem[k]=*(ptr+k);

@@ -75,14 +75,13 @@ int main()
         addr_inout[i]=0x40000000+i;
     }
 
-while(1){
-    NVIC(interrup_regs, flash_mem, regs, bands, mem);
-for(regs[15]=0; regs[15]<num_instructions; regs[15]++){
-    instruction = getInstruction(instructions[regs[15]]); // Instrucción en la posición 0
-	decodeInstruction(instruction, regs, bands, mem, address, addr, flash_mem, flash_mem, in_out, addr_inout); // Debe ser modificada de acuerdo a cada código
-    //registros[instruction.op1_value] = instruction.op2_value;
-	//------- No modificar ------//
+while(1){    /*siclo infinito en el que se revisa si hay interrupcion y luego se ejecuta la instruccion*/
+    NVIC(interrup_regs, flash_mem, regs, bands, mem); /* funcion que detecta una interrupcion y la ejecuta*/
+for(regs[15]=0; regs[15]<num_instructions; regs[15]++){ /* proceso que recorre el arreglo de instrucciones*/
+    instruction = getInstruction(instructions[regs[15]]); /*captura la instruccion del arreglo*/
+	decodeInstruction(instruction, regs, bands, mem, address, addr, flash_mem, flash_mem, in_out, addr_inout); /*decodifica la instruccion*/
 
+ /*ciclo para mostrar los registros en la interfaz*/
     j=0;
     k=0;
     if(regs[15]==0){
@@ -156,7 +155,7 @@ for(regs[15]=0; regs[15]<num_instructions; regs[15]++){
 }
 }
 
-
+	/*proceso para liberar la memoria*/
 	for(i=0; i<num_instructions; i++){
 		free(read.array[i]);
 	}

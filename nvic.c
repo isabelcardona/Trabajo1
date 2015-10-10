@@ -1,12 +1,12 @@
 #include <math.h>
 #include <stdint.h>
 
-void NVIC(uint32_t* interrup_regs, uint32_t* flash_mem, uint32_t* regs, uint32_t* bands, uint32_t* mem)
+void NVIC(uint32_t* interrup_regs, uint32_t* flash_mem, uint32_t* regs, uint32_t* bands, uint32_t* mem) /*funcion que detecta una interrupcion y la ejecuta*/
 {
     int i=0;
     for(i=0;i<32;i++)
     {
-        if(interrup_regs[i]==1){
+        if(interrup_regs[i]==1){   /* copia los registros y las banderas necesarios a la Sram*/
             mem[0]=regs[15];
             mem[1]=bands[0];
             mem[2]=bands[1];
@@ -20,7 +20,7 @@ void NVIC(uint32_t* interrup_regs, uint32_t* flash_mem, uint32_t* regs, uint32_t
             mem[10]=regs[14];
         }
         //En esta parte se ejecuta la instruccion de la interrupcion;
-        if(regs[14]==0xfffffff){
+        if(regs[14]==0xfffffff){ /*carga los registros y las banderas con los valores anteriores a la interrupcion */
             regs[15]=mem[0];
             bands[0]=mem[1];
             bands[1]=mem[2];

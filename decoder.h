@@ -44,19 +44,35 @@ instruction_t getInstruction(char* instStr);
     \brief Lee instrucciones de un archivo.
     \param filename Nombre del archivo.
     \param instructions estructura con arreglo con las instrucciones leidas.
-	\return Entero indicando la cantidad de líneas.
+	\return estructura tipo instruction_t.
 */
 int readFile(char* filename, ins_t* instructions);
 
 /** \fn int countLines(FILE fp)
+    \brief lee el archivo completo.
+    \param filename  cadena que contiene nombre del archivo.
+	\return Entero con la cantidad de líneas del archivo.
+*/
+int countLines(FILE* fp);
+/** 
     \brief Cuenta la cantidad de líneas de un archivo.
     \param fp Puntero al archivo.
 	\return Entero con la cantidad de líneas del archivo.
 */
-int countLines(FILE* fp);
 
 int bitcount(instruction_t instruction);
+/** 
+    \brief indica los registros activos para las funciones de push y pop.
+    \param instruction_t estructura con la instruccion.
+	\return Entero con la cantidad de registros activos.
+*/
 
 void memA(char* p, uint32_t* mem, uint32_t* addr);
+/** 
+    \brief asigna valores en la memoria para las funciones de push y pop.
+    \param1 p puntuero que permite guardar byte por byte.
+	\param2 mem arreglo para la Sram.
+	\param3 addr arreglo con las direcciones corespondientes a la memoria.
+*/
 
 #endif /*_DECODER_H_*/
