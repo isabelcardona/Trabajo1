@@ -6,13 +6,14 @@
 #include <math.h>
 #include <stdint.h>
 #include <curses.h>
+#include "io.h"
 
 int main()
 {
 
-    uint32_t regs[16]={0},rd,rm,imm,r, mem[128]={0}, address=0, addr[128]={0}, interrup_regs[33], flash_mem[33], addr_flash[33], in_out[8], addr_inout[8];
+    uint32_t regs[16]={0},rd,rm,imm,r, mem[128]={0}, address=0, addr[128]={0}, interrup_regs[16], flash_mem[33], addr_flash[33], in_out[14], addr_inout[14];
     regs[13]=0x2000007f; // posicion de sp para una memoria de 128 bytes;
-    int i,j,k,num_instructions,bands[4]={0},pc=0;
+    int i,j,k,num_instructions,bands[4]={0},pc=0,op;
 		ins_t read;
 		char** instructions;
 		instruction_t instruction;
@@ -37,7 +38,9 @@ int main()
 
 	start_color();	/* Permite manejar colores */
 
-	init_pair(1, COLOR_GREEN, COLOR_BLACK);	/* Pair 1 -> Texto verde
+	init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	init_pair(2, COLOR_WHITE, COLOR_BLACK);
+	init_pair(3, COLOR_BLUE, COLOR_BLACK);	/* Pair 1 -> Texto verde
 											   fondo Negro */
 		/*border( ACS_VLINE, ACS_VLINE,
 			ACS_HLINE, ACS_HLINE,
@@ -47,13 +50,14 @@ int main()
 
 
 	attron(COLOR_PAIR(1));	/* Activa el color verde para el
-							   texto y negro para el fondo Pair 1*/
+							  // texto y negro para el fondo Pair 1*/
     move(0, 20);
     printw("EMULADOR DE PROCESADOR ARM Cortex-M0_V6");
 	refresh();
 		/* Imprime en la pantalla
 					Sin esto el printw no es mostrado */
     //move(4,9);//getch();
+    attroff(COLOR_PAIR(1));
 
 
 
@@ -71,91 +75,39 @@ int main()
     for(i=0;i<33;i++){
         addr_flash[i]=0x00000000+i;
     }
-    for(i=0;i<8;i++){
+    for(i=0;i<14;i++){
         addr_inout[i]=0x40000000+i;
     }
 
-while(1){    /*siclo infinito en el que se revisa si hay interrupcion y luego se ejecuta la instruccion*/
-    NVIC(interrup_regs, flash_mem, regs, bands, mem); /* funcion que detecta una interrupcion y la ejecuta*/
-for(regs[15]=0; regs[15]<num_instructions; regs[15]++){ /* proceso que recorre el arreglo de instrucciones*/
-    instruction = getInstruction(instructions[regs[15]]); /*captura la instruccion del arreglo*/
-	decodeInstruction(instruction, regs, bands, mem, address, addr, flash_mem, flash_mem, in_out, addr_inout); /*decodifica la instruccion*/
-
- /*ciclo para mostrar los registros en la interfaz*/
-    j=0;
-    k=0;
-    if(regs[15]==0){
-    for(i=6;i<17;i=i+2){
-    if((j==5)||(j==9)){
-        k=k+22;
-        i=6;
-    }
-
-
-	move(i, k);	/* Mueve el cursor a la posición i,k*/
-	printw("R%d=",j);
-	refresh();	/* Imprime en la pantalla
-					Sin esto el printw no es mostrado */
-    if(j==12){
-        i=100;
-    }
-
-	j++;
-    }
-    move(6,66);
-    printw("N=");
+    attron(COLOR_PAIR(2));
+    move(6, 0);
+    printw("Ingrese:\n 1:mostrar registros\n 2:mostrar Sram\n 3:mostrar puertos i/o");
 	refresh();
-	move(8,66);
-    printw("Z=");
-	refresh();
-	move(10,66);
-    printw("C=");
-	refresh();
-	move(12,66);
-    printw("V=");
-	refresh();
-    }
+	attroff(COLOR_PAIR(2));
 
-    	attroff(COLOR_PAIR(1));	/* DEshabilita los colores Pair 1 */
+while(1){
+    NVIC(interrup_regs, flash_mem, regs, bands, mem);
+for(regs[15]=0; regs[15]<num_instructions; regs[15]++){
+    instruction = getInstruction(instructions[regs[15]]); // Instrucción en la posición 0
+	decodeInstruction(instruction, regs, bands, mem, address, addr, flash_mem, flash_mem, in_out, addr_inout); // Debe ser modificada de acuerdo a cada código
 
-    j=0;
-    k=0;
-    for(i=6;i<17;i=i+2){
-    if((j==5)||(j==9)){
-        k=k+22;
-        i=6;
-    }
-    move(i, k+3);	/* Mueve el cursor a la posición i,k*/
-    if(j>9){
-       move(i, k+4);	/* Mueve el cursor a la posición i,k*/
-    }
 
-	printw("%x            ",regs[j]);
-	refresh();	/* Imprime en la pantalla Sin esto el printw no es mostrado */
-    if(j==12){
-        i=100;
-    }
-	j++;
-    }
+    //mostrar_registros(regs, bands);
 
-    move(6,68);
-    printw("%d",bands[0]);
-    refresh();
-    move(8, 68);
-    printw("%d",bands[1]);
-    refresh();
-    move(10, 68);
-    printw("%d",bands[2]);
-    refresh();
-    move(12, 68);
-    printw("%d",bands[3]);
-    refresh();
-	/* Libera la memoria reservada para las instrucciones */
-    getch();
+
+	scanf("%d",&op);
+	switch (op)
+	{
+	    case 1: mostrar_registros(regs, bands);
+	    break;
+	    case 2: mostrar_sram(mem,addr);
+	    break;
+	}
+
 }
 }
 
-	/*proceso para liberar la memoria*/
+
 	for(i=0; i<num_instructions; i++){
 		free(read.array[i]);
 	}
@@ -166,6 +118,7 @@ for(regs[15]=0; regs[15]<num_instructions; regs[15]++){ /* proceso que recorre e
 
 	return 0;
 	}
+
 
 
 

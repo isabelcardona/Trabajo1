@@ -36,27 +36,29 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="trabajo1final_micros/Makefile" />
-		<Unit filename="trabajo1final_micros/banderas.c">
+		<Unit filename="banderas.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="trabajo1final_micros/banderas.h" />
-		<Unit filename="trabajo1final_micros/decoder.c">
+		<Unit filename="banderas.h" />
+		<Unit filename="decoder.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="trabajo1final_micros/decoder.h" />
-		<Unit filename="trabajo1final_micros/instrucciones.c">
+		<Unit filename="decoder.h" />
+		<Unit filename="instrucciones.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="trabajo1final_micros/instrucciones.h" />
-		<Unit filename="trabajo1final_micros/libpdcurses.dll" />
-		<Unit filename="trabajo1final_micros/libreria.c">
+		<Unit filename="instrucciones.h" />
+		<Unit filename="libreria.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="trabajo1final_micros/libreria.h" />
-		<Unit filename="trabajo1final_micros/main.c">
+		<Unit filename="libreria.h" />
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="nvic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="nvic.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
