@@ -14,9 +14,9 @@ int x=0, i, j, p=0;
 void decodeInstruction(instruction_t instruction, uint32_t* regs, uint32_t* bands, uint32_t* mem, uint32_t* address, uint32_t* addr, uint32_t* flash_mem, uint32_t* addr_flash, uint32_t* in_out, uint32_t* addr_inout)
 {
     ptr=aux;
-    xp=regs;
+    xp=regs; /** puntero tipo caracter para guardar de 1 a 4 bytes de un registro*/
 
-
+	/** condiciones para las instrucciones de salto*/
     if( (strcmp(instruction.mnemonic,"B") == 0)){
             regs[15]=instruction.op1_value;
     }

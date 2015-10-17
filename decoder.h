@@ -56,7 +56,16 @@ int readFile(char* filename, ins_t* instructions);
 int countLines(FILE* fp);
 
 int bitcount(instruction_t instruction);
-
+/** 
+   \brief indica los registros activos para las funciones de push y pop.
+   \param instruction_t estructura con la instruccion.
+   \return Entero con la cantidad de registros activos.
+*/
 void memA(char* p, uint32_t* mem, uint32_t* addr);
-
+/** 
+    \brief asigna valores en la memoria para las funciones de push y pop.
+    \param1 p puntuero que permite guardar byte por byte.
+	\param2 mem arreglo para la Sram.
+	\param3 addr arreglo con las direcciones corespondientes a la memoria.
+*/
 #endif /*_DECODER_H_*/

@@ -6,8 +6,7 @@
 #include "io.h"
 
 
-void mostrar_registros(uint32_t* regs, uint32_t* bands) // funcion que muestra los registros
-                                                   //en la interfaz.
+void mostrar_registros(uint32_t* regs, uint32_t* bands) 
 {
     attron(COLOR_PAIR(1));
 
@@ -21,9 +20,9 @@ void mostrar_registros(uint32_t* regs, uint32_t* bands) // funcion que muestra l
     }
 
 
-	move(i, k);	/* Mueve el cursor a la posición i,k*/
+	move(i, k);	/** Mueve el cursor a la posición i,k*/
 	printw("R%d=",j);
-	refresh();	/* Imprime en la pantalla
+	refresh();	/** Imprime en la pantalla
 					Sin esto el printw no es mostrado */
     if(j==12){
         i=100;
@@ -43,7 +42,7 @@ void mostrar_registros(uint32_t* regs, uint32_t* bands) // funcion que muestra l
 	move(12,66);
     printw("V=");
 	refresh();
-	attroff(COLOR_PAIR(1));	/* DEshabilita los colores Pair 1 */
+	attroff(COLOR_PAIR(1));	/** DEshabilita los colores Pair 1 */
 
     attron(COLOR_PAIR(2));
     j=0;
@@ -53,13 +52,13 @@ void mostrar_registros(uint32_t* regs, uint32_t* bands) // funcion que muestra l
         k=k+22;
         i=6;
     }
-    move(i, k+3);	/* Mueve el cursor a la posición i,k*/
+    move(i, k+3);	/** Mueve el cursor a la posición i,k*/
     if(j>9){
-       move(i, k+4);	/* Mueve el cursor a la posición i,k*/
+       move(i, k+4);	/** Mueve el cursor a la posición i,k*/
     }
 
 	printw("%x            ",regs[j]);
-	refresh();	/* Imprime en la pantalla Sin esto el printw no es mostrado */
+	refresh();	/** Imprime en la pantalla Sin esto el printw no es mostrado */
     if(j==12){
         i=100;
     }
