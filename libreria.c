@@ -120,7 +120,46 @@ void mostrar_sram(uint32_t* mem, uint32_t* addr)
         }
     }
     attroff(COLOR_PAIR(2));
+}
 
+
+void mostrar_iomem(uint32_t* in_out, uint32_t* addr_inout){
+    int i,j,k;
+    k=0;
+    attron(COLOR_PAIR(2));
+    for(i=0;i<25;i++){
+            for(j=0;j<80;j++){
+                 move(i,j);
+                 printw(" ");
+                 refresh;
+            }
+    }
+    attron(COLOR_PAIR(3));
+    mvprintw(6, 0, "PORT-A");
+    mvprintw(8, 0, "DDR");
+    mvprintw(10, 0, "PORT");
+    mvprintw(12, 0, "PIN");
+    mvprintw(14, 0, "INTERRUPT");
+    mvprintw(6, 40, "PORT-B");
+    mvprintw(8, 40, "DDR");
+    mvprintw(10, 40, "PORT");
+    mvprintw(12, 40, "PIN");
+    mvprintw(14, 40, "INTERRUPT");
+    attroff(COLOR_PAIR(3));
+
+    attron(COLOR_PAIR(2));
+    mvprintw(8, 10, "%x",in_out[0]);
+    mvprintw(10, 10, "%x",in_out[1]);
+    mvprintw(12, 10, "%x",in_out[2]);
+    mvprintw(14, 10, "%x",in_out[3]);
+
+    mvprintw(8, 50, "%x",in_out[10]);
+    mvprintw(10, 50, "%x",in_out[11]);
+    mvprintw(12, 50, "%x",in_out[12]);
+    mvprintw(14, 50, "%x",in_out[13]);
+    attroff(COLOR_PAIR(2));
 
 }
+
+
 

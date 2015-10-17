@@ -102,6 +102,8 @@ for(regs[15]=0; regs[15]<num_instructions; regs[15]++){
 	    break;
 	    case 2: mostrar_sram(mem,addr);
 	    break;
+	    case 3: mostrar_iomem(in_out, addr_inout);
+	    break;
 	}
 
 }

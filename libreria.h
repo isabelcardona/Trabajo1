@@ -7,3 +7,5 @@ return un entero con el resultado
 
 void mostrar_sram(uint32_t* mem, uint32_t* addr);
 
+void mostrar_iomem(uint32_t* in_out, uint32_t* addr_inout);
+
